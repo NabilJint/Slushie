@@ -1,10 +1,14 @@
-import { Text, View, Image, TouchableOpacity, SafeAreaView, Dimensions } from "react-native";
+import { Text, View, Image, TouchableOpacity, SafeAreaView, useWindowDimensions } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import { router, type Href } from "expo-router";
 import { images } from "@/constants/images";
 
-const { width } = Dimensions.get("window");
-
 export default function OnboardingScreen() {
+  const { width } = useWindowDimensions();
+  const handleGetStarted = () => {
+    router.replace("/" as Href);
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
       <StatusBar style="dark" />
@@ -60,6 +64,7 @@ export default function OnboardingScreen() {
       <View className="px-8 pb-10 w-full items-center">
         <TouchableOpacity
           activeOpacity={0.9}
+          onPress={handleGetStarted}
           className="w-full flex-row justify-between items-center bg-voltage-violet border border-carbon rounded-pills h-14 px-6"
         >
           <View className="w-5" />
