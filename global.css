@@ -1,0 +1,177 @@
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css";
+
+@import "nativewind/theme";
+
+@theme {
+  /* === Colors === */
+  --color-carbon: #000000;
+  --color-paper-white: #ffffff;
+  --color-sky-wash: #dceeff;
+  --color-concrete-gray: #cccccc;
+  --color-soft-mist: #e9e9e9;
+  --color-electric-blue: #4da2ff;
+  --color-mint-pop: #55db9c;
+  --color-lavender: #e9ccff;
+  --color-ember: #fb4903;
+  --color-sunburst: #ffd731;
+  --color-voltage-violet: #5c4ade;
+
+  /* === Font Families === */
+  --font-body: "Poppins-Regular", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: "Poppins-Bold", ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  /* === Font Sizes (Tailwind v4 + NativeWind v5) === */
+  --text-caption: 12px;
+  --text-caption--line-height: 1.56;
+  --text-caption--letter-spacing: -0.01px;
+  --text-body-lg: 15px;
+  --text-body-lg--line-height: 1.39;
+  --text-body-lg--letter-spacing: -0.01px;
+  --text-subheading: 24px;
+  --text-subheading--line-height: 1.2;
+  --text-subheading--letter-spacing: -0.01px;
+  --text-heading-sm: 30px;
+  --text-heading-sm--line-height: 1.1;
+  --text-heading-sm--letter-spacing: -0.01px;
+  --text-heading: 64px;
+  --text-heading--line-height: 1;
+  --text-heading--letter-spacing: -0.01px;
+
+  /* === Font Weights === */
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  /* === Spacing === */
+  --spacing-4: 4px;
+  --spacing-8: 8px;
+  --spacing-12: 12px;
+  --spacing-16: 16px;
+  --spacing-20: 20px;
+  --spacing-24: 24px;
+  --spacing-28: 28px;
+  --spacing-32: 32px;
+  --spacing-40: 40px;
+  --spacing-44: 44px;
+  --spacing-48: 48px;
+  --spacing-60: 60px;
+  --spacing-80: 80px;
+  --spacing-128: 128px;
+  --spacing-180: 180px;
+  --spacing-224: 224px;
+
+  /* === Border Radius === */
+  --radius-nav: 1600px;
+  --radius-body: 30px;
+  --radius-cards: 20px;
+  --radius-pills: 1600px;
+  --radius-buttons: 1600px;
+  --radius-wallet-icon: 16px;
+  --radius-cards-elevated: 40px;
+}
+
+/* ============================================
+   Reusable Utility Classes (BEM-style naming)
+   ============================================ */
+
+/* --- Buttons --- */
+
+.btn-filled {
+  @apply bg-carbon rounded-buttons py-3 px-6 items-center justify-center;
+}
+
+.btn-filled-text {
+  @apply text-paper-white font-bold text-base tracking-wide font-display;
+}
+
+.btn-outlined {
+  @apply bg-paper-white rounded-buttons py-3 px-6 items-center justify-center border border-carbon;
+}
+
+.btn-outlined-text {
+  @apply text-carbon font-bold text-base tracking-wide font-display;
+}
+
+.btn-ghost {
+  @apply py-3 px-6 items-center justify-center;
+}
+
+.btn-ghost-text {
+  @apply text-carbon font-bold text-base font-display;
+}
+
+/* --- Cards --- */
+
+.card {
+  @apply bg-paper-white rounded-cards p-6 border border-carbon;
+}
+
+.card-elevated {
+  @apply bg-paper-white rounded-cards-elevated p-6 border border-carbon;
+}
+
+/* --- Surfaces / Section Backgrounds --- */
+
+.surface-primary {
+  @apply bg-sky-wash;
+}
+
+.surface-secondary {
+  @apply bg-concrete-gray;
+}
+
+.surface-white {
+  @apply bg-paper-white;
+}
+
+.surface-accent {
+  @apply bg-lavender;
+}
+
+/* --- Text Styles --- */
+
+.text-display {
+  @apply font-display text-5xl leading-[1] text-carbon text-center;
+}
+
+.text-display-left {
+  @apply font-display text-5xl leading-[1] text-carbon;
+}
+
+.text-tagline {
+  @apply font-body text-body-lg leading-[1.39] text-carbon/70 text-center;
+}
+
+.text-tagline-left {
+  @apply font-body text-body-lg leading-[1.39] text-carbon/70;
+}
+
+.text-nav-label {
+  @apply text-xs tracking-wide font-display;
+}
+
+.text-caption {
+  @apply font-body text-caption leading-[1.56] tracking-tight;
+}
+
+/* --- Tags / Pills --- */
+
+.tag {
+  @apply bg-paper-white rounded-pills px-3 py-1.5 border border-carbon;
+}
+
+.tag-filled {
+  @apply bg-carbon rounded-pills px-3 py-1.5 border border-carbon;
+}
+
+.tag-filled-text {
+  @apply text-paper-white text-xs tracking-wide font-display;
+}
+
+/* --- Section Spacing --- */
+
+.section-padded {
+  @apply px-8 py-12;
+}
