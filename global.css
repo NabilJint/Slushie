@@ -38,6 +38,15 @@
   --text-heading: 64px;
   --text-heading--line-height: 1;
   --text-heading--letter-spacing: -0.01px;
+  --text-display-sm: 48px;
+  --text-display-sm--line-height: 0.85;
+  --text-display-sm--letter-spacing: -0.01px;
+  --text-display: 64px;
+  --text-display--line-height: 0.8;
+  --text-display--letter-spacing: -0.01px;
+  --text-display-lg: 80px;
+  --text-display-lg--line-height: 0.75;
+  --text-display-lg--letter-spacing: -0.01px;
 
   /* === Font Weights === */
   --font-weight-medium: 500;
@@ -140,6 +149,10 @@
   @apply font-display text-5xl leading-[1] text-carbon;
 }
 
+.text-display-crushed {
+  @apply font-display text-display leading-[0.8] text-carbon tracking-tight;
+}
+
 .text-tagline {
   @apply font-body text-body-lg leading-[1.39] text-carbon/70 text-center;
 }
@@ -168,6 +181,12 @@
 
 .tag-filled-text {
   @apply text-paper-white text-xs tracking-wide font-display;
+}
+
+/* --- Stickers --- */
+
+.sticker {
+  @apply border border-carbon rounded-cards items-center justify-center p-2;
 }
 
 /* --- Section Spacing --- */
