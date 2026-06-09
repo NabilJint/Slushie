@@ -51,6 +51,11 @@ export default function Index() {
           className="mt-4"
         />
         <Button
+          title="Tabs"
+          onPress={() => router.push("/(tabs)" as Href)}
+          className="mt-4"
+        />
+        <Button
           title="Sign Out"
           variant="ghost"
           onPress={() => signOut()}
