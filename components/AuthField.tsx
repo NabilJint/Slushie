@@ -22,9 +22,9 @@ export default function AuthField({
   const [isSecure, setIsSecure] = useState(secureTextEntry);
 
   return (
-    <View className="w-full bg-paper-white border border-concrete-gray rounded-2xl px-4 py-3 flex-row justify-between items-center">
+    <View className="w-full bg-paper-white border border-carbon/30 rounded-2xl px-4 py-3 flex-row justify-between items-center">
       <View className="flex-1">
-        <Text className="text-carbon/40 font-body text-xs mb-1">{label}</Text>
+        <Text className="text-carbon/50 font-body text-xs mb-1">{label}</Text>
         <TextInput
           value={value}
           onChangeText={onChangeText}

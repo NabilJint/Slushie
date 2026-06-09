@@ -1,13 +1,11 @@
-import { Text, View, Image, TouchableOpacity, SafeAreaView, useWindowDimensions } from "react-native";
+import { Text, View, Image, SafeAreaView, useWindowDimensions } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { router, type Href } from "expo-router";
 import { images } from "@/constants/images";
+import Button from "@/components/ui/Button";
 
 export default function OnboardingScreen() {
   const { width } = useWindowDimensions();
-  const handleGetStarted = () => {
-    router.replace("/sign-up" as Href);
-  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
@@ -62,21 +60,13 @@ export default function OnboardingScreen() {
       </View>
 
       <View className="px-8 pb-10 w-full items-center">
-        <TouchableOpacity
-          activeOpacity={0.9}
-          onPress={handleGetStarted}
-          className="w-full flex-row justify-between items-center bg-voltage-violet border border-carbon rounded-pills h-14 px-6"
-        >
-          <View className="w-5" />
-          <Text className="text-paper-white text-lg font-bold text-center font-display">
-            Get Started
-          </Text>
-          <Text className="text-paper-white font-display text-lg font-bold">
-            {`>`}
-          </Text>
-        </TouchableOpacity>
+        <Button
+          title="Get Started"
+          onPress={() => router.replace("/sign-up" as Href)}
+          rightIcon={<Text className="btn-filled-text text-lg">{`>`}</Text>}
+          className="h-14 px-6"
+        />
       </View>
     </SafeAreaView>
   );
 }
-

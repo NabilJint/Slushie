@@ -3,6 +3,7 @@ import BackButton from "@/components/BackButton";
 import MascotAuth from "@/components/MascotAuth";
 import SocialAuthSection from "@/components/SocialAuthSection";
 import VerificationCodeModal from "@/components/VerificationCodeModal";
+import Button from "@/components/ui/Button";
 import { useSignIn } from "@clerk/expo";
 import { router, type Href } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -114,16 +115,13 @@ export default function SignInScreen() {
             ) : null}
           </View>
 
-          <TouchableOpacity
-            activeOpacity={0.9}
+          <Button
+            title={fetchStatus === "fetching" ? "Sending code..." : "Log in"}
             onPress={handleLogIn}
             disabled={fetchStatus === "fetching"}
-            className="w-full bg-voltage-violet rounded-2xl h-14 items-center justify-center mt-6"
-          >
-            <Text className="text-paper-white font-display text-lg font-semibold">
-              {fetchStatus === "fetching" ? "Sending code..." : "Log in"}
-            </Text>
-          </TouchableOpacity>
+            loading={fetchStatus === "fetching"}
+            className="mt-6"
+          />
 
           <SocialAuthSection />
 

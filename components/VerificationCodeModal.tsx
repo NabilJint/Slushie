@@ -68,7 +68,7 @@ export default function VerificationCodeModal({
         />
 
         <View className="bg-paper-white rounded-t-3xl px-6 pb-10 pt-8">
-          <View className="w-10 h-1 bg-concrete-gray/50 rounded-full self-center mb-6" />
+          <View className="w-10 h-1 bg-carbon/20 rounded-full self-center mb-6" />
 
           <Text className="font-display text-carbon text-2xl font-bold text-center mb-2">
             Check your email
@@ -96,7 +96,7 @@ export default function VerificationCodeModal({
                       ? "border-voltage-violet bg-voltage-violet/5"
                       : filled
                         ? "border-voltage-violet bg-voltage-violet/10"
-                        : "border-concrete-gray/50"
+                        : "border-carbon/30"
                   }`}
                 >
                   <Text
@@ -126,7 +126,7 @@ export default function VerificationCodeModal({
             onPress={handleClose}
             className="self-center"
           >
-            <Text className="font-body text-carbon/40 text-sm">Cancel</Text>
+            <Text className="font-body text-carbon/50 text-sm">Cancel</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>

@@ -1,6 +1,7 @@
 import { useAuth, useUser, useClerk } from "@clerk/expo";
-import { Redirect, type Href } from "expo-router";
-import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import { Redirect, router, type Href } from "expo-router";
+import { View, Text, ActivityIndicator } from "react-native";
+import Button from "@/components/ui/Button";
 
 export default function Index() {
   const { isSignedIn, isLoaded } = useAuth();
@@ -26,13 +27,17 @@ export default function Index() {
         <Text className="text-tagline">
           {user?.emailAddresses?.[0]?.emailAddress ?? "Ready to learn!"}
         </Text>
-        <TouchableOpacity
-          className="btn-filled w-full mt-4"
-          activeOpacity={0.8}
+        <Button
+          title="Choose a Language"
+          onPress={() => router.push("/language-select" as Href)}
+          className="mt-4"
+        />
+        <Button
+          title="Sign Out"
+          variant="ghost"
           onPress={() => signOut()}
-        >
-          <Text className="btn-filled-text">Sign Out</Text>
-        </TouchableOpacity>
+          className="mt-2"
+        />
       </View>
     </View>
   );

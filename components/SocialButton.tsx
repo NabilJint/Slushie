@@ -17,7 +17,7 @@ export default function SocialButton({
     <TouchableOpacity
       activeOpacity={0.8}
       onPress={onPress}
-      className="w-full bg-paper-white border border-concrete-gray/60 rounded-2xl h-14 flex-row items-center justify-center px-6"
+      className="w-full bg-paper-white border border-carbon/30 rounded-2xl h-14 flex-row items-center justify-center px-6"
     >
       <Text
         className="font-display font-bold text-xl mr-3"

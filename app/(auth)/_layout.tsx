@@ -12,5 +12,11 @@ export default function AuthRoutesLayout() {
     return <Redirect href={"/" as Href} />;
   }
 
-  return <Stack />;
+  return (
+    <Stack
+      screenOptions={{
+        headerShown: false,
+      }}
+    />
+  );
 }

@@ -16,6 +16,7 @@ import AuthField from "@/components/AuthField";
 import SocialAuthSection from "@/components/SocialAuthSection";
 import MascotAuth from "@/components/MascotAuth";
 import VerificationCodeModal from "@/components/VerificationCodeModal";
+import Button from "@/components/ui/Button";
 
 export default function SignUpScreen() {
   const { signUp, errors, fetchStatus } = useSignUp();
@@ -111,16 +112,13 @@ export default function SignUpScreen() {
             )}
           </View>
 
-          <TouchableOpacity
-            activeOpacity={0.9}
+          <Button
+            title={fetchStatus === "fetching" ? "Creating account..." : "Sign Up"}
             onPress={handleSignUp}
             disabled={fetchStatus === "fetching"}
-            className="w-full bg-voltage-violet rounded-2xl h-14 items-center justify-center mt-6"
-          >
-            <Text className="text-paper-white font-display text-lg font-semibold">
-              {fetchStatus === "fetching" ? "Creating account..." : "Sign Up"}
-            </Text>
-          </TouchableOpacity>
+            loading={fetchStatus === "fetching"}
+            className="mt-6"
+          />
 
           <SocialAuthSection />
 
