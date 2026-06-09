@@ -51,6 +51,36 @@ export const units: Unit[] = [
     lessonIds: ["it-basics-1-lesson-1", "it-basics-1-lesson-2", "it-basics-1-lesson-3", "it-basics-1-lesson-4"],
     xpReward: 40,
   },
+  // Japanese - Unit 1: Basics
+  {
+    id: "ja-basics-1",
+    languageId: "ja",
+    title: "Basics",
+    description: "Greetings, introductions, and essential phrases.",
+    order: 1,
+    lessonIds: ["ja-basics-1-lesson-1", "ja-basics-1-lesson-2", "ja-basics-1-lesson-3", "ja-basics-1-lesson-4"],
+    xpReward: 40,
+  },
+  // Korean - Unit 1: Basics
+  {
+    id: "ko-basics-1",
+    languageId: "ko",
+    title: "Basics",
+    description: "Greetings, introductions, and essential phrases.",
+    order: 1,
+    lessonIds: ["ko-basics-1-lesson-1", "ko-basics-1-lesson-2", "ko-basics-1-lesson-3", "ko-basics-1-lesson-4"],
+    xpReward: 40,
+  },
+  // Chinese - Unit 1: Basics
+  {
+    id: "zh-basics-1",
+    languageId: "zh",
+    title: "Basics",
+    description: "Greetings, introductions, and essential phrases.",
+    order: 1,
+    lessonIds: ["zh-basics-1-lesson-1", "zh-basics-1-lesson-2", "zh-basics-1-lesson-3", "zh-basics-1-lesson-4"],
+    xpReward: 40,
+  },
 ];
 
 export function getUnitsByLanguage(languageId: string): Unit[] {

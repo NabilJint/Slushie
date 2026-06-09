@@ -60,7 +60,11 @@ export default function Index() {
           title="Clear Storage"
           variant="outlined"
           onPress={async () => {
-            await AsyncStorage.removeItem("language-storage");
+            try {
+              await AsyncStorage.removeItem("language-storage");
+            } catch (e) {
+              console.error("Failed to clear language storage:", e);
+            }
             clearSelectedLanguage();
           }}
           className="mt-2"

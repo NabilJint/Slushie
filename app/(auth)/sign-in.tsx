@@ -30,6 +30,7 @@ export default function SignInScreen() {
   const [emailError, setEmailError] = useState("");
   const [showVerification, setShowVerification] = useState(false);
   const [verifyError, setVerifyError] = useState<string | null>(null);
+  const [loginError, setLoginError] = useState<string | null>(null);
 
   const handleLogIn = async () => {
     if (!isValidEmail(email)) {
@@ -37,11 +38,14 @@ export default function SignInScreen() {
       return;
     }
     setEmailError("");
+    setLoginError(null);
 
     const { error: createError } = await signIn.create({
       identifier: email,
     });
     if (createError) {
+      console.error("signIn.create error:", createError);
+      setLoginError(createError.message);
       return;
     }
 
@@ -49,6 +53,8 @@ export default function SignInScreen() {
       emailAddress: email,
     });
     if (sendError) {
+      console.error("signIn.emailCode.sendCode error:", sendError);
+      setLoginError(sendError.message);
       return;
     }
 
@@ -111,6 +117,11 @@ export default function SignInScreen() {
             {emailError ? (
               <Text className="text-ember font-body text-sm mt-2">
                 {emailError}
+              </Text>
+            ) : null}
+            {loginError ? (
+              <Text className="text-ember font-body text-sm mt-2">
+                {loginError}
               </Text>
             ) : null}
           </View>

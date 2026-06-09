@@ -1,4 +1,4 @@
-import { TextInput, View } from "react-native";
+import { TextInput, View, type KeyboardTypeOptions } from "react-native";
 
 interface InputProps {
   value: string;
@@ -6,7 +6,7 @@ interface InputProps {
   placeholder?: string;
   leftIcon?: React.ReactNode;
   secureTextEntry?: boolean;
-  keyboardType?: "default" | "email-address";
+  keyboardType?: KeyboardTypeOptions;
   autoCapitalize?: "none" | "sentences" | "words" | "characters";
   className?: string;
   inputClassName?: string;

@@ -52,7 +52,6 @@ export interface MultipleChoiceActivity extends ActivityBase {
   type: "multiple-choice";
   prompt: string;
   options: ChoiceOption[];
-  correctIndex: number;
 }
 
 export interface TranslateActivity extends ActivityBase {

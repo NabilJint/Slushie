@@ -10,7 +10,8 @@ import Input from "@/components/ui/Input";
 
 export default function LanguageSelectScreen() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedLanguage, setSelectedLanguage] = useState("es");
+  const storeLanguageId = useLanguageStore((state) => state.selectedLanguageId);
+  const [selectedLanguage, setSelectedLanguage] = useState(storeLanguageId ?? "es");
   const setLanguage = useLanguageStore((state) => state.setSelectedLanguage);
 
   const filteredLanguages = languages.filter((lang) =>

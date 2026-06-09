@@ -40,7 +40,6 @@ export const lessons: Lesson[] = [
           { id: "es-b1-l1-a2-o3", text: "Thank you", isCorrect: false },
           { id: "es-b1-l1-a2-o4", text: "Please", isCorrect: false },
         ],
-        correctIndex: 1,
       },
       {
         id: "es-b1-l1-a3",
@@ -167,7 +166,6 @@ export const lessons: Lesson[] = [
           { id: "es-b1-l3-a2-o3", text: "Perdón", isCorrect: false },
           { id: "es-b1-l3-a2-o4", text: "De nada", isCorrect: false },
         ],
-        correctIndex: 1,
       },
       {
         id: "es-b1-l3-a3",
@@ -241,7 +239,6 @@ export const lessons: Lesson[] = [
           { id: "es-b1-l4-a2-o3", text: "Where is it?", isCorrect: true },
           { id: "es-b1-l4-a2-o4", text: "How is it?", isCorrect: false },
         ],
-        correctIndex: 2,
       },
       {
         id: "es-b1-l4-a3",
@@ -310,7 +307,6 @@ export const lessons: Lesson[] = [
           { id: "es-f1-l1-a2-o3", text: "Milk", isCorrect: false },
           { id: "es-f1-l1-a2-o4", text: "Rice", isCorrect: false },
         ],
-        correctIndex: 1,
       },
       {
         id: "es-f1-l1-a3",
@@ -437,7 +433,6 @@ export const lessons: Lesson[] = [
           { id: "es-f1-l3-a3-o3", text: "Sour", isCorrect: false },
           { id: "es-f1-l3-a3-o4", text: "Bitter", isCorrect: false },
         ],
-        correctIndex: 1,
       },
     ],
     aiTeacherPrompt: {
@@ -547,7 +542,6 @@ export const lessons: Lesson[] = [
           { id: "fr-b1-l1-a2-o3", text: "Hello / Good day", isCorrect: true },
           { id: "fr-b1-l1-a2-o4", text: "Good night", isCorrect: false },
         ],
-        correctIndex: 2,
       },
       {
         id: "fr-b1-l1-a3",
@@ -761,7 +755,6 @@ export const lessons: Lesson[] = [
           { id: "de-b1-l1-a2-o3", text: "Good day", isCorrect: true },
           { id: "de-b1-l1-a2-o4", text: "Hello", isCorrect: false },
         ],
-        correctIndex: 2,
       },
       {
         id: "de-b1-l1-a3",
@@ -864,7 +857,6 @@ export const lessons: Lesson[] = [
           { id: "de-b1-l3-a2-o3", text: "Sorry", isCorrect: false },
           { id: "de-b1-l3-a2-o4", text: "Goodbye", isCorrect: false },
         ],
-        correctIndex: 1,
       },
       {
         id: "de-b1-l3-a3",
@@ -964,7 +956,6 @@ export const lessons: Lesson[] = [
           { id: "it-b1-l1-a2-o3", text: "Good morning", isCorrect: true },
           { id: "it-b1-l1-a2-o4", text: "Hello", isCorrect: false },
         ],
-        correctIndex: 2,
       },
       {
         id: "it-b1-l1-a3",

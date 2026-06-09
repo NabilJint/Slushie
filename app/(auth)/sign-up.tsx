@@ -24,18 +24,25 @@ export default function SignUpScreen() {
   const [password, setPassword] = useState("");
   const [showVerification, setShowVerification] = useState(false);
   const [verifyError, setVerifyError] = useState<string | null>(null);
+  const [signUpError, setSignUpError] = useState<string | null>(null);
 
   const handleSignUp = async () => {
+    setSignUpError(null);
+
     const { error } = await signUp.password({
       emailAddress: email,
       password,
     });
     if (error) {
+      console.error("signUp.password error:", error);
+      setSignUpError(error.message);
       return;
     }
 
     const { error: sendError } = await signUp.verifications.sendEmailCode();
     if (sendError) {
+      console.error("signUp.verifications.sendEmailCode error:", sendError);
+      setSignUpError(sendError.message);
       return;
     }
 
@@ -138,9 +145,14 @@ export default function SignUpScreen() {
         </ScrollView>
       </KeyboardAvoidingView>
 
+      {signUpError ? (
+        <View className="px-6 pb-2">
+          <Text className="text-ember font-body text-sm">{signUpError}</Text>
+        </View>
+      ) : null}
       <VerificationCodeModal
         visible={showVerification}
-        email={email}
+        email={email.trim()}
         onClose={() => {
           setShowVerification(false);
           setVerifyError(null);
