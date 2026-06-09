@@ -113,11 +113,12 @@ export default function LanguageSelectScreen() {
           />
         </View>
 
-        <View className="overflow-hidden" style={{ height: 180 }}>
+        <View className="overflow-hidden" style={{ height: 200 }}>
           <Image
             source={images.earth}
             style={{ width: "100%", height: "100%" }}
-            resizeMode="contain"
+            resizeMode="center"
+            className="mt-auto"
           />
         </View>
       </View>
