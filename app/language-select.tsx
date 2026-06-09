@@ -1,15 +1,17 @@
 import { useState } from "react";
 import { Text, View, Image, TouchableOpacity, ScrollView, SafeAreaView } from "react-native";
-import { router } from "expo-router";
+import { router, type Href } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { images } from "@/constants/images";
 import { languages } from "@/data/languages";
+import { useLanguageStore } from "@/store/use-language-store";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 
 export default function LanguageSelectScreen() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState("es");
+  const setLanguage = useLanguageStore((state) => state.setSelectedLanguage);
 
   const filteredLanguages = languages.filter((lang) =>
     lang.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -108,7 +110,10 @@ export default function LanguageSelectScreen() {
         <View className="px-6 pb-4">
           <Button
             title="Confirm"
-            onPress={() => router.back()}
+            onPress={() => {
+              setLanguage(selectedLanguage);
+              router.replace("/" as Href);
+            }}
             disabled={!selectedLanguage}
           />
         </View>

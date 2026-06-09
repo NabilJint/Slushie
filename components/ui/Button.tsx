@@ -30,7 +30,7 @@ export default function Button({
 
   const textClass =
     variant === "filled" ? "btn-filled-text" :
-    variant === "outlined" ? "btn-outlined-text" :
+    variant === "outlined" ? "btn-outlined-text " :
     "btn-ghost-text";
 
   return (
@@ -38,16 +38,16 @@ export default function Button({
       activeOpacity={0.9}
       onPress={onPress}
       disabled={disabled || loading}
-      className={`w-full flex-row items-center justify-center ${containerClass} ${className || ""}`}
+      className={`w-full items-center justify-center ${containerClass} ${className || ""}`}
     >
       {loading ? (
         <ActivityIndicator size="small" color={variant === "filled" ? "#ffffff" : "#000000"} />
       ) : (
-        <>
+        <View className="flex-row items-center">
           {leftIcon && <View className="mr-2">{leftIcon}</View>}
           <Text className={`${textClass} ${textClassName || ""}`}>{title}</Text>
           {rightIcon && <View className="ml-2">{rightIcon}</View>}
-        </>
+        </View>
       )}
     </TouchableOpacity>
   );

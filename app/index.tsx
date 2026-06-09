@@ -1,12 +1,18 @@
 import { useAuth, useUser, useClerk } from "@clerk/expo";
 import { Redirect, router, type Href } from "expo-router";
-import { View, Text, ActivityIndicator } from "react-native";
+import { View, Text, ActivityIndicator, Image } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Button from "@/components/ui/Button";
+import { useLanguageStore } from "@/store/use-language-store";
+import { getLanguageById } from "@/data/languages";
 
 export default function Index() {
   const { isSignedIn, isLoaded } = useAuth();
   const { user } = useUser();
   const { signOut } = useClerk();
+  const clearSelectedLanguage = useLanguageStore((state) => state.clearSelectedLanguage);
+  const selectedLanguageId = useLanguageStore((state) => state.selectedLanguageId);
+  const selectedLanguage = selectedLanguageId ? getLanguageById(selectedLanguageId) : null;
 
   if (!isLoaded) {
     return (
@@ -27,6 +33,18 @@ export default function Index() {
         <Text className="text-tagline">
           {user?.emailAddresses?.[0]?.emailAddress ?? "Ready to learn!"}
         </Text>
+        {selectedLanguage && (
+          <View className="flex-row items-center gap-2 mt-2">
+            <Image
+              source={{ uri: selectedLanguage.flagEmoji }}
+              style={{ width: 28, height: 28 }}
+              resizeMode="contain"
+            />
+            <Text className="text-carbon font-display text-subheading">
+              Learning: {selectedLanguage.name}
+            </Text>
+          </View>
+        )}
         <Button
           title="Choose a Language"
           onPress={() => router.push("/language-select" as Href)}
@@ -36,6 +54,15 @@ export default function Index() {
           title="Sign Out"
           variant="ghost"
           onPress={() => signOut()}
+          className="mt-2"
+        />
+        <Button
+          title="Clear Storage"
+          variant="outlined"
+          onPress={async () => {
+            await AsyncStorage.removeItem("language-storage");
+            clearSelectedLanguage();
+          }}
           className="mt-2"
         />
       </View>

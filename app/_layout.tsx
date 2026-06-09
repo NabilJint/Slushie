@@ -1,11 +1,12 @@
 import "../global.css";
 
 import { useEffect } from "react";
-import { Stack } from "expo-router";
+import { Stack, router, usePathname } from "expo-router";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { ClerkProvider } from "@clerk/expo";
+import { ClerkProvider, useAuth } from "@clerk/expo";
 import { tokenCache } from "@/lib/token-cache";
+import { useLanguageStore } from "@/store/use-language-store";
 
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
 
@@ -14,6 +15,29 @@ if (!publishableKey) {
 }
 
 SplashScreen.preventAutoHideAsync();
+
+function RootLayoutContent() {
+  const { isSignedIn, isLoaded } = useAuth();
+  const selectedLanguageId = useLanguageStore((state) => state.selectedLanguageId);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (isLoaded && isSignedIn && !selectedLanguageId && pathname !== "/language-select") {
+      router.replace("/language-select");
+    }
+  }, [isLoaded, isSignedIn, selectedLanguageId, pathname]);
+
+  if (!isLoaded) return null;
+
+  return (
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        contentStyle: { backgroundColor: "#ffffff" },
+      }}
+    />
+  );
+}
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -35,12 +59,7 @@ export default function RootLayout() {
 
   return (
     <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: "#ffffff" },
-        }}
-      />
+      <RootLayoutContent />
     </ClerkProvider>
   );
 }
