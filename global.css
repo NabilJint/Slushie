@@ -92,7 +92,7 @@
 }
 
 .btn-filled-text {
-  @apply text-paper-white font-bold text-base tracking-wide font-display;
+  @apply text-paper-white font-bold text-base tracking-wide font-display text-center;
 }
 
 .btn-outlined {
@@ -100,7 +100,7 @@
 }
 
 .btn-outlined-text {
-  @apply text-carbon font-bold text-base tracking-wide font-display;
+  @apply text-carbon font-bold text-base tracking-wide font-display text-center;
 }
 
 .btn-ghost {
@@ -108,7 +108,7 @@
 }
 
 .btn-ghost-text {
-  @apply text-carbon font-bold text-base font-display;
+  @apply text-carbon font-bold text-base font-display text-center;
 }
 
 /* --- Cards --- */

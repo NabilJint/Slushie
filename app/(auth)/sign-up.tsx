@@ -16,6 +16,7 @@ import AuthField from "@/components/AuthField";
 import SocialAuthSection from "@/components/SocialAuthSection";
 import MascotAuth from "@/components/MascotAuth";
 import VerificationCodeModal from "@/components/VerificationCodeModal";
+import Button from "@/components/ui/Button";
 
 export default function SignUpScreen() {
   const { signUp, errors, fetchStatus } = useSignUp();
@@ -23,18 +24,25 @@ export default function SignUpScreen() {
   const [password, setPassword] = useState("");
   const [showVerification, setShowVerification] = useState(false);
   const [verifyError, setVerifyError] = useState<string | null>(null);
+  const [signUpError, setSignUpError] = useState<string | null>(null);
 
   const handleSignUp = async () => {
+    setSignUpError(null);
+
     const { error } = await signUp.password({
       emailAddress: email,
       password,
     });
     if (error) {
+      console.error("signUp.password error:", error);
+      setSignUpError(error.message);
       return;
     }
 
     const { error: sendError } = await signUp.verifications.sendEmailCode();
     if (sendError) {
+      console.error("signUp.verifications.sendEmailCode error:", sendError);
+      setSignUpError(sendError.message);
       return;
     }
 
@@ -111,16 +119,13 @@ export default function SignUpScreen() {
             )}
           </View>
 
-          <TouchableOpacity
-            activeOpacity={0.9}
+          <Button
+            title={fetchStatus === "fetching" ? "Creating account..." : "Sign Up"}
             onPress={handleSignUp}
             disabled={fetchStatus === "fetching"}
-            className="w-full bg-voltage-violet rounded-2xl h-14 items-center justify-center mt-6"
-          >
-            <Text className="text-paper-white font-display text-lg font-semibold">
-              {fetchStatus === "fetching" ? "Creating account..." : "Sign Up"}
-            </Text>
-          </TouchableOpacity>
+            loading={fetchStatus === "fetching"}
+            className="mt-6"
+          />
 
           <SocialAuthSection />
 
@@ -140,9 +145,14 @@ export default function SignUpScreen() {
         </ScrollView>
       </KeyboardAvoidingView>
 
+      {signUpError ? (
+        <View className="px-6 pb-2">
+          <Text className="text-ember font-body text-sm">{signUpError}</Text>
+        </View>
+      ) : null}
       <VerificationCodeModal
         visible={showVerification}
-        email={email}
+        email={email.trim()}
         onClose={() => {
           setShowVerification(false);
           setVerifyError(null);

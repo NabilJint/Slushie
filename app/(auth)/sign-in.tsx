@@ -3,6 +3,7 @@ import BackButton from "@/components/BackButton";
 import MascotAuth from "@/components/MascotAuth";
 import SocialAuthSection from "@/components/SocialAuthSection";
 import VerificationCodeModal from "@/components/VerificationCodeModal";
+import Button from "@/components/ui/Button";
 import { useSignIn } from "@clerk/expo";
 import { router, type Href } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -29,6 +30,7 @@ export default function SignInScreen() {
   const [emailError, setEmailError] = useState("");
   const [showVerification, setShowVerification] = useState(false);
   const [verifyError, setVerifyError] = useState<string | null>(null);
+  const [loginError, setLoginError] = useState<string | null>(null);
 
   const handleLogIn = async () => {
     if (!isValidEmail(email)) {
@@ -36,11 +38,14 @@ export default function SignInScreen() {
       return;
     }
     setEmailError("");
+    setLoginError(null);
 
     const { error: createError } = await signIn.create({
       identifier: email,
     });
     if (createError) {
+      console.error("signIn.create error:", createError);
+      setLoginError(createError.message);
       return;
     }
 
@@ -48,6 +53,8 @@ export default function SignInScreen() {
       emailAddress: email,
     });
     if (sendError) {
+      console.error("signIn.emailCode.sendCode error:", sendError);
+      setLoginError(sendError.message);
       return;
     }
 
@@ -112,18 +119,20 @@ export default function SignInScreen() {
                 {emailError}
               </Text>
             ) : null}
+            {loginError ? (
+              <Text className="text-ember font-body text-sm mt-2">
+                {loginError}
+              </Text>
+            ) : null}
           </View>
 
-          <TouchableOpacity
-            activeOpacity={0.9}
+          <Button
+            title={fetchStatus === "fetching" ? "Sending code..." : "Log in"}
             onPress={handleLogIn}
             disabled={fetchStatus === "fetching"}
-            className="w-full bg-voltage-violet rounded-2xl h-14 items-center justify-center mt-6"
-          >
-            <Text className="text-paper-white font-display text-lg font-semibold">
-              {fetchStatus === "fetching" ? "Sending code..." : "Log in"}
-            </Text>
-          </TouchableOpacity>
+            loading={fetchStatus === "fetching"}
+            className="mt-6"
+          />
 
           <SocialAuthSection />
 

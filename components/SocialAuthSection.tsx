@@ -35,11 +35,11 @@ export default function SocialAuthSection() {
   return (
     <>
       <View className="flex-row items-center my-6">
-        <View className="flex-1 h-[1px] bg-concrete-gray/50" />
-        <Text className="px-4 text-carbon/40 font-body text-sm">
+        <View className="flex-1 h-[1px] bg-carbon/20" />
+        <Text className="px-4 text-carbon/50 font-body text-sm">
           or continue with
         </Text>
-        <View className="flex-1 h-[1px] bg-concrete-gray/50" />
+        <View className="flex-1 h-[1px] bg-carbon/20" />
       </View>
 
       <View className="gap-3">
