@@ -1,0 +1,103 @@
+import { useState } from "react";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
+import { router, type Href } from "expo-router";
+import BackButton from "@/components/BackButton";
+import AuthField from "@/components/AuthField";
+import SocialAuthSection from "@/components/SocialAuthSection";
+import MascotAuth from "@/components/MascotAuth";
+import VerificationCodeModal from "@/components/VerificationCodeModal";
+
+export default function SignUpScreen() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showVerification, setShowVerification] = useState(false);
+
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
+      <StatusBar style="dark" />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          showsVerticalScrollIndicator={false}
+          className="px-6"
+        >
+          <View className="pt-4 pb-2 justify-start items-start">
+            <BackButton />
+          </View>
+
+          <View className="mt-2 mb-4">
+            <Text className="font-display text-carbon text-3xl font-bold tracking-tight mb-2">
+              Create your account
+            </Text>
+            <Text className="font-body text-carbon/50 text-base">
+              Start your language journey today ✨
+            </Text>
+          </View>
+
+          <MascotAuth />
+
+          <View className="gap-4 mt-2">
+            <AuthField
+              label="Email"
+              value={email}
+              onChangeText={setEmail}
+              placeholder="you@example.com"
+              keyboardType="email-address"
+            />
+            <AuthField
+              label="Password"
+              value={password}
+              onChangeText={setPassword}
+              placeholder="••••••••"
+              secureTextEntry
+            />
+          </View>
+
+          <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={() => setShowVerification(true)}
+            className="w-full bg-voltage-violet rounded-2xl h-14 items-center justify-center mt-6"
+          >
+            <Text className="text-paper-white font-display text-lg font-semibold">
+              Sign Up
+            </Text>
+          </TouchableOpacity>
+
+          <SocialAuthSection />
+
+          <View className="flex-row justify-center items-center mt-8 mb-6">
+            <Text className="text-carbon/50 font-body text-sm">
+              Already have an account?{" "}
+            </Text>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => router.replace("/sign-in" as Href)}
+            >
+              <Text className="text-voltage-violet font-display text-sm font-semibold">
+                Log in
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+
+      <VerificationCodeModal
+        visible={showVerification}
+        email={email}
+        onClose={() => setShowVerification(false)}
+      />
+    </SafeAreaView>
+  );
+}
