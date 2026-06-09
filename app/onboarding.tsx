@@ -6,7 +6,7 @@ import { images } from "@/constants/images";
 export default function OnboardingScreen() {
   const { width } = useWindowDimensions();
   const handleGetStarted = () => {
-    router.replace("/" as Href);
+    router.replace("/sign-up" as Href);
   };
 
   return (
