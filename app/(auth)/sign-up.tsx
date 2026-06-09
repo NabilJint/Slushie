@@ -10,6 +10,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { router, type Href } from "expo-router";
+import { useSignUp } from "@clerk/expo";
 import BackButton from "@/components/BackButton";
 import AuthField from "@/components/AuthField";
 import SocialAuthSection from "@/components/SocialAuthSection";
@@ -17,9 +18,44 @@ import MascotAuth from "@/components/MascotAuth";
 import VerificationCodeModal from "@/components/VerificationCodeModal";
 
 export default function SignUpScreen() {
+  const { signUp, errors, fetchStatus } = useSignUp();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showVerification, setShowVerification] = useState(false);
+  const [verifyError, setVerifyError] = useState<string | null>(null);
+
+  const handleSignUp = async () => {
+    const { error } = await signUp.password({
+      emailAddress: email,
+      password,
+    });
+    if (error) {
+      return;
+    }
+
+    const { error: sendError } = await signUp.verifications.sendEmailCode();
+    if (sendError) {
+      return;
+    }
+
+    setShowVerification(true);
+    setVerifyError(null);
+  };
+
+  const handleVerify = async (code: string) => {
+    const { error: verifyErr } =
+      await signUp.verifications.verifyEmailCode({ code });
+    if (verifyErr) {
+      setVerifyError(verifyErr.message);
+      return;
+    }
+
+    if (signUp.status === "complete") {
+      await signUp.finalize();
+      setShowVerification(false);
+      router.replace("/" as Href);
+    }
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
@@ -56,6 +92,11 @@ export default function SignUpScreen() {
               placeholder="you@example.com"
               keyboardType="email-address"
             />
+            {errors.fields.emailAddress && (
+              <Text className="text-ember font-body text-sm">
+                {errors.fields.emailAddress.message}
+              </Text>
+            )}
             <AuthField
               label="Password"
               value={password}
@@ -63,15 +104,21 @@ export default function SignUpScreen() {
               placeholder="••••••••"
               secureTextEntry
             />
+            {errors.fields.password && (
+              <Text className="text-ember font-body text-sm">
+                {errors.fields.password.message}
+              </Text>
+            )}
           </View>
 
           <TouchableOpacity
             activeOpacity={0.9}
-            onPress={() => setShowVerification(true)}
+            onPress={handleSignUp}
+            disabled={fetchStatus === "fetching"}
             className="w-full bg-voltage-violet rounded-2xl h-14 items-center justify-center mt-6"
           >
             <Text className="text-paper-white font-display text-lg font-semibold">
-              Sign Up
+              {fetchStatus === "fetching" ? "Creating account..." : "Sign Up"}
             </Text>
           </TouchableOpacity>
 
@@ -96,7 +143,12 @@ export default function SignUpScreen() {
       <VerificationCodeModal
         visible={showVerification}
         email={email}
-        onClose={() => setShowVerification(false)}
+        onClose={() => {
+          setShowVerification(false);
+          setVerifyError(null);
+        }}
+        onVerify={handleVerify}
+        error={verifyError}
       />
     </SafeAreaView>
   );

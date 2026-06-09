@@ -7,7 +7,12 @@ interface SocialButtonProps {
   onPress?: () => void;
 }
 
-export default function SocialButton({ icon, iconColor, label, onPress }: SocialButtonProps) {
+export default function SocialButton({
+  icon,
+  iconColor,
+  label,
+  onPress,
+}: SocialButtonProps) {
   return (
     <TouchableOpacity
       activeOpacity={0.8}

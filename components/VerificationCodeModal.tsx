@@ -1,20 +1,20 @@
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
+  KeyboardAvoidingView,
   Modal,
+  Platform,
   Text,
-  View,
   TextInput,
   TouchableOpacity,
-  KeyboardAvoidingView,
-  Platform,
+  View,
 } from "react-native";
-import { router, type Href } from "expo-router";
 
 interface VerificationCodeModalProps {
   visible: boolean;
   email: string;
   onClose: () => void;
-  onComplete?: (code: string) => void;
+  onVerify: (code: string) => Promise<void>;
+  error?: string | null;
 }
 
 const CODE_LENGTH = 6;
@@ -23,15 +23,21 @@ export default function VerificationCodeModal({
   visible,
   email,
   onClose,
-  onComplete,
+  onVerify,
+  error,
 }: VerificationCodeModalProps) {
   const [code, setCode] = useState("");
   const inputRef = useRef<TextInput>(null);
 
+  const resetState = () => {
+    setCode("");
+  };
+
   useEffect(() => {
     if (visible) {
-      setCode("");
-      setTimeout(() => inputRef.current?.focus(), 300);
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 300);
     }
   }, [visible]);
 
@@ -40,14 +46,13 @@ export default function VerificationCodeModal({
     setCode(digits);
 
     if (digits.length === CODE_LENGTH) {
-      setTimeout(() => {
-        if (onComplete) {
-          onComplete(digits);
-        } else {
-          router.replace("/" as Href);
-        }
-      }, 300);
+      onVerify(digits);
     }
+  };
+
+  const handleClose = () => {
+    resetState();
+    onClose();
   };
 
   return (
@@ -59,7 +64,7 @@ export default function VerificationCodeModal({
         <TouchableOpacity
           style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.4)" }}
           activeOpacity={1}
-          onPress={onClose}
+          onPress={handleClose}
         />
 
         <View className="bg-paper-white rounded-t-3xl px-6 pb-10 pt-8">
@@ -72,6 +77,12 @@ export default function VerificationCodeModal({
             We sent a verification code to{"\n"}
             <Text className="text-carbon font-medium">{email}</Text>
           </Text>
+
+          {error && (
+            <Text className="font-body text-ember text-sm text-center mb-4">
+              {error}
+            </Text>
+          )}
 
           <View className="flex-row justify-center gap-3 mb-8">
             {Array.from({ length: CODE_LENGTH }).map((_, i) => {
@@ -112,12 +123,10 @@ export default function VerificationCodeModal({
 
           <TouchableOpacity
             activeOpacity={0.7}
-            onPress={onClose}
+            onPress={handleClose}
             className="self-center"
           >
-            <Text className="font-body text-carbon/40 text-sm">
-              Cancel
-            </Text>
+            <Text className="font-body text-carbon/40 text-sm">Cancel</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>

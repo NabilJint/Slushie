@@ -1,16 +1,35 @@
+import { useSSO } from "@clerk/expo";
+import * as AuthSession from "expo-auth-session";
 import { Text, View } from "react-native";
 import SocialButton from "./SocialButton";
 
 const PROVIDERS = [
-  { icon: "G", iconColor: "#ef4444", label: "Continue with Google" },
-  { icon: "f", iconColor: "#2563eb", label: "Continue with Facebook" },
-  { icon: "\uF8FF", iconColor: "#000000", label: "Continue with Apple" },
+  { strategy: "oauth_google" as const, icon: "G", iconColor: "#ef4444", label: "Continue with Google" },
+  { strategy: "oauth_facebook" as const, icon: "f", iconColor: "#2563eb", label: "Continue with Facebook" },
+  { strategy: "oauth_apple" as const, icon: "\uF8FF", iconColor: "#000000", label: "Continue with Apple" },
 ] as const;
 
 export default function SocialAuthSection() {
-  const handleSocialPress = (provider: string) => {
-    // TODO: Implement social authentication for provider
-    console.log(`Authenticating with ${provider}`);
+  const { startSSOFlow } = useSSO();
+
+  const handleSocialPress = async (strategy: typeof PROVIDERS[number]["strategy"]) => {
+    try {
+      const { createdSessionId, setActive, authSessionResult } =
+        await startSSOFlow({
+          strategy,
+          redirectUrl: AuthSession.makeRedirectUri(),
+        });
+
+      if (authSessionResult?.type !== "success") {
+        return;
+      }
+
+      if (createdSessionId && setActive) {
+        await setActive({ session: createdSessionId });
+      }
+    } catch (err) {
+      console.error(`OAuth error with ${strategy}:`, err);
+    }
   };
 
   return (
@@ -30,7 +49,7 @@ export default function SocialAuthSection() {
             icon={provider.icon}
             iconColor={provider.iconColor}
             label={provider.label}
-            onPress={() => handleSocialPress(provider.label)}
+            onPress={() => handleSocialPress(provider.strategy)}
           />
         ))}
       </View>

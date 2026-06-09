@@ -1,39 +1,72 @@
+import AuthField from "@/components/AuthField";
+import BackButton from "@/components/BackButton";
+import MascotAuth from "@/components/MascotAuth";
+import SocialAuthSection from "@/components/SocialAuthSection";
+import VerificationCodeModal from "@/components/VerificationCodeModal";
+import { useSignIn } from "@clerk/expo";
+import { router, type Href } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 import {
-  Text,
-  View,
-  TouchableOpacity,
-  ScrollView,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StatusBar } from "expo-status-bar";
-import { router, type Href } from "expo-router";
-import BackButton from "@/components/BackButton";
-import AuthField from "@/components/AuthField";
-import SocialAuthSection from "@/components/SocialAuthSection";
-import MascotAuth from "@/components/MascotAuth";
-import VerificationCodeModal from "@/components/VerificationCodeModal";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function isValidEmail(email: string): boolean {
-  return email.trim().length > 0 && EMAIL_REGEX.test(email);
+  return email.trim().length > 0 && EMAIL_REGEX.test(email.trim());
 }
 
 export default function SignInScreen() {
+  const { signIn, fetchStatus } = useSignIn();
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [showVerification, setShowVerification] = useState(false);
+  const [verifyError, setVerifyError] = useState<string | null>(null);
 
-  const handleLogIn = () => {
+  const handleLogIn = async () => {
     if (!isValidEmail(email)) {
       setEmailError("Please enter a valid email address");
       return;
     }
     setEmailError("");
+
+    const { error: createError } = await signIn.create({
+      identifier: email,
+    });
+    if (createError) {
+      return;
+    }
+
+    const { error: sendError } = await signIn.emailCode.sendCode({
+      emailAddress: email,
+    });
+    if (sendError) {
+      return;
+    }
+
     setShowVerification(true);
+    setVerifyError(null);
+  };
+
+  const handleVerify = async (code: string) => {
+    const { error: verifyErr } = await signIn.emailCode.verifyCode({ code });
+    if (verifyErr) {
+      setVerifyError(verifyErr.message);
+      return;
+    }
+
+    if (signIn.status === "complete") {
+      await signIn.finalize();
+      setShowVerification(false);
+      router.replace("/" as Href);
+    }
   };
 
   return (
@@ -75,17 +108,20 @@ export default function SignInScreen() {
               keyboardType="email-address"
             />
             {emailError ? (
-              <Text className="text-ember font-body text-sm mt-2">{emailError}</Text>
+              <Text className="text-ember font-body text-sm mt-2">
+                {emailError}
+              </Text>
             ) : null}
           </View>
 
           <TouchableOpacity
             activeOpacity={0.9}
             onPress={handleLogIn}
+            disabled={fetchStatus === "fetching"}
             className="w-full bg-voltage-violet rounded-2xl h-14 items-center justify-center mt-6"
           >
             <Text className="text-paper-white font-display text-lg font-semibold">
-              Log in
+              {fetchStatus === "fetching" ? "Sending code..." : "Log in"}
             </Text>
           </TouchableOpacity>
 
@@ -93,7 +129,7 @@ export default function SignInScreen() {
 
           <View className="flex-row justify-center items-center mt-8 mb-6">
             <Text className="text-carbon/50 font-body text-sm">
-              Don't have an account?{" "}
+              Don&apos;t have an account?{" "}
             </Text>
             <TouchableOpacity
               activeOpacity={0.7}
@@ -110,7 +146,12 @@ export default function SignInScreen() {
       <VerificationCodeModal
         visible={showVerification}
         email={email.trim()}
-        onClose={() => setShowVerification(false)}
+        onClose={() => {
+          setShowVerification(false);
+          setVerifyError(null);
+        }}
+        onVerify={handleVerify}
+        error={verifyError}
       />
     </SafeAreaView>
   );
