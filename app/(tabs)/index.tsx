@@ -7,6 +7,7 @@ import {
   SafeAreaView,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import { router, type Href } from "expo-router";
 import { useUser } from "@clerk/expo";
 import { usePostHog } from "posthog-react-native";
 import { useLanguageStore } from "@/store/use-language-store";
@@ -104,13 +105,18 @@ export default function HomeScreen() {
             <TouchableOpacity
               activeOpacity={0.9}
               className="bg-paper-white rounded-xl py-2.5 px-5 self-start border border-carbon"
-              onPress={() =>
-                posthog.capture("continue_learning_tapped", {
+              onPress={() => {
+                posthog?.capture("continue_learning_tapped", {
                   language_id: selectedLanguageId,
                   unit_id: firstUnit?.id ?? null,
                   lesson_id: firstLesson?.id ?? null,
-                })
-              }
+                });
+                if (firstLesson) {
+                  router.push(`/lesson/${firstLesson.id}` as Href);
+                } else {
+                  router.push("/(tabs)/learn" as Href);
+                }
+              }}
             >
               <Text className="text-voltage-violet font-display text-sm font-bold">
                 Continue
@@ -193,11 +199,12 @@ export default function HomeScreen() {
           <TouchableOpacity
             activeOpacity={0.8}
             className="w-12 h-12 bg-mint-pop rounded-full items-center justify-center"
-            onPress={() =>
-              posthog.capture("ai_video_call_started", {
+            onPress={() => {
+              posthog?.capture("ai_video_call_started", {
                 language_id: selectedLanguageId,
-              })
-            }
+              });
+              router.push("/(tabs)/ai-teacher" as Href);
+            }}
           >
             <Text style={{ fontSize: 20 }}>📹</Text>
           </TouchableOpacity>
