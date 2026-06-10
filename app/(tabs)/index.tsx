@@ -33,7 +33,7 @@ export default function HomeScreen() {
   const firstUnit = units[0];
   const firstLesson = firstUnit ? getLessonsByUnit(firstUnit.id)[0] : null;
 
-  const displayName = user?.firstName ?? user?.emailAddresses?.[0]?.emailAddress?.split("@")[0] ?? "Learner";
+  const displayName = user?.firstName ?? "Learner";
   const greeting = language ? (GREETINGS[language.languageCode] ?? "Hello") : "Hello";
 
   return (

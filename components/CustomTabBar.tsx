@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   View,
   Pressable,
@@ -6,10 +6,11 @@ import {
   Platform,
 } from "react-native";
 import Animated, {
-  useSharedValue,
   useAnimatedStyle,
   withTiming,
   Easing,
+  makeMutable,
+  type SharedValue,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -127,17 +128,16 @@ function TabItem({
 export function CustomTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
 
-  const scale0 = useSharedValue(0);
-  const scale1 = useSharedValue(0);
-  const scale2 = useSharedValue(0);
-  const scale3 = useSharedValue(0);
-  const scale4 = useSharedValue(0);
-  const scales = [scale0, scale1, scale2, scale3, scale4];
+  const [scales] = useState(() =>
+    state.routes.map(() => makeMutable(0) as SharedValue<number>),
+  );
 
   const activeIndex = state.index;
 
   useEffect(() => {
-    scales[activeIndex].value = 1;
+    if (activeIndex >= 0 && activeIndex < scales.length) {
+      scales[activeIndex].value = 1;
+    }
   }, []);
 
   useEffect(() => {
