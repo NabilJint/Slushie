@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Text, View, Image, TouchableOpacity, ScrollView, SafeAreaView } from "react-native";
 import { router, type Href } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { usePostHog } from "posthog-react-native";
 import { images } from "@/constants/images";
 import { languages } from "@/data/languages";
 import { useLanguageStore } from "@/store/use-language-store";
@@ -9,6 +10,7 @@ import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 
 export default function LanguageSelectScreen() {
+  const posthog = usePostHog();
   const [searchQuery, setSearchQuery] = useState("");
   const storeLanguageId = useLanguageStore((state) => state.selectedLanguageId);
   const [selectedLanguage, setSelectedLanguage] = useState(storeLanguageId ?? "es");
@@ -112,6 +114,11 @@ export default function LanguageSelectScreen() {
           <Button
             title="Confirm"
             onPress={() => {
+              const lang = languages.find((l) => l.id === selectedLanguage);
+              posthog.capture("language_selected", {
+                language_id: selectedLanguage,
+                language_name: lang?.name ?? selectedLanguage,
+              });
               setLanguage(selectedLanguage);
               router.replace("/" as Href);
             }}

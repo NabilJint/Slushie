@@ -1,11 +1,13 @@
 import "../global.css";
 
-import { useEffect } from "react";
-import { Stack, router, usePathname } from "expo-router";
+import { useEffect, useRef } from "react";
+import { Stack, router, usePathname, useGlobalSearchParams } from "expo-router";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { ClerkProvider, useAuth } from "@clerk/expo";
+import { PostHogProvider } from "posthog-react-native";
 import { tokenCache } from "@/lib/token-cache";
+import { posthog } from "@/lib/posthog";
 import { useLanguageStore } from "@/store/use-language-store";
 
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
@@ -20,6 +22,15 @@ function RootLayoutContent() {
   const { isSignedIn, isLoaded } = useAuth();
   const selectedLanguageId = useLanguageStore((state) => state.selectedLanguageId);
   const pathname = usePathname();
+  const params = useGlobalSearchParams();
+  const previousPathname = useRef<string | undefined>(undefined);
+
+  useEffect(() => {
+    if (previousPathname.current !== pathname) {
+      posthog.screen(pathname, { previous_screen: previousPathname.current ?? null, ...params });
+      previousPathname.current = pathname;
+    }
+  }, [pathname, params]);
 
   useEffect(() => {
     if (isLoaded && isSignedIn && !selectedLanguageId && pathname !== "/language-select") {
@@ -59,7 +70,17 @@ export default function RootLayout() {
 
   return (
     <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
-      <RootLayoutContent />
+      <PostHogProvider
+        client={posthog}
+        autocapture={{
+          captureScreens: true,
+          captureTouches: true,
+          propsToCapture: ["testID"],
+          maxElementsCaptured: 20,
+        }}
+      >
+        <RootLayoutContent />
+      </PostHogProvider>
     </ClerkProvider>
   );
 }

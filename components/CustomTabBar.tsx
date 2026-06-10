@@ -51,12 +51,12 @@ function TabItem({
   route: any;
   index: number;
   activeIndex: number;
-  scale: Animated.SharedValue<number>;
+  scale: SharedValue<number>;
   descriptors: any;
   navigation: any;
   label: string;
   tabConfig: TabConfig | undefined;
-  iconName: string;
+  iconName: keyof typeof Ionicons.glyphMap;
 }) {
   const isFocused = activeIndex === index;
 
@@ -159,9 +159,9 @@ export function CustomTabBar({ state, descriptors, navigation }: BottomTabBarPro
           const label = options.title ?? route.name;
           const isFocused = activeIndex === index;
           const tabConfig = TAB_CONFIG[label];
-          const iconName = isFocused
+          const iconName = (isFocused
             ? (tabConfig?.activeIcon ?? "ellipse")
-            : (tabConfig?.icon ?? "ellipse-outline");
+            : (tabConfig?.icon ?? "ellipse-outline")) as keyof typeof Ionicons.glyphMap;
 
           return (
             <TabItem

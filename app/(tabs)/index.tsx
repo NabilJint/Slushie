@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useUser } from "@clerk/expo";
+import { usePostHog } from "posthog-react-native";
 import { useLanguageStore } from "@/store/use-language-store";
 import { getLanguageById } from "@/data/languages";
 import { getUnitsByLanguage } from "@/data/units";
@@ -26,6 +27,7 @@ const GREETINGS: Record<string, string> = {
 
 export default function HomeScreen() {
   const { user } = useUser();
+  const posthog = usePostHog();
   const selectedLanguageId = useLanguageStore((state) => state.selectedLanguageId);
 
   const language = getLanguageById(selectedLanguageId ?? "");
@@ -102,6 +104,13 @@ export default function HomeScreen() {
             <TouchableOpacity
               activeOpacity={0.9}
               className="bg-paper-white rounded-xl py-2.5 px-5 self-start border border-carbon"
+              onPress={() =>
+                posthog.capture("continue_learning_tapped", {
+                  language_id: selectedLanguageId,
+                  unit_id: firstUnit?.id ?? null,
+                  lesson_id: firstLesson?.id ?? null,
+                })
+              }
             >
               <Text className="text-voltage-violet font-display text-sm font-bold">
                 Continue
@@ -181,7 +190,15 @@ export default function HomeScreen() {
               <Text className="text-carbon/40 font-body text-xs">Practice speaking</Text>
             </View>
           </View>
-          <TouchableOpacity activeOpacity={0.8} className="w-12 h-12 bg-mint-pop rounded-full items-center justify-center">
+          <TouchableOpacity
+            activeOpacity={0.8}
+            className="w-12 h-12 bg-mint-pop rounded-full items-center justify-center"
+            onPress={() =>
+              posthog.capture("ai_video_call_started", {
+                language_id: selectedLanguageId,
+              })
+            }
+          >
             <Text style={{ fontSize: 20 }}>📹</Text>
           </TouchableOpacity>
         </View>

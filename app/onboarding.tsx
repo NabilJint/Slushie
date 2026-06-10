@@ -1,11 +1,13 @@
 import { Text, View, Image, SafeAreaView, useWindowDimensions } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { router, type Href } from "expo-router";
+import { usePostHog } from "posthog-react-native";
 import { images } from "@/constants/images";
 import Button from "@/components/ui/Button";
 
 export default function OnboardingScreen() {
   const { width } = useWindowDimensions();
+  const posthog = usePostHog();
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
@@ -62,7 +64,10 @@ export default function OnboardingScreen() {
       <View className="px-8 pb-10 w-full items-center">
         <Button
           title="Get Started"
-          onPress={() => router.replace("/sign-up" as Href)}
+          onPress={() => {
+            posthog.capture("onboarding_get_started");
+            router.replace("/sign-up" as Href);
+          }}
           rightIcon={<Text className="btn-filled-text text-lg">{`>`}</Text>}
           className="h-14 px-6"
         />

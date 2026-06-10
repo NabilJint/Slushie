@@ -11,6 +11,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { router, type Href } from "expo-router";
 import { useSignUp } from "@clerk/expo";
+import { usePostHog } from "posthog-react-native";
 import BackButton from "@/components/BackButton";
 import AuthField from "@/components/AuthField";
 import SocialAuthSection from "@/components/SocialAuthSection";
@@ -20,6 +21,7 @@ import Button from "@/components/ui/Button";
 
 export default function SignUpScreen() {
   const { signUp, errors, fetchStatus } = useSignUp();
+  const posthog = usePostHog();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showVerification, setShowVerification] = useState(false);
@@ -36,6 +38,7 @@ export default function SignUpScreen() {
     if (error) {
       console.error("signUp.password error:", error);
       setSignUpError(error.message);
+      posthog.capture("sign_up_failed", { error_message: error.message });
       return;
     }
 
@@ -43,6 +46,7 @@ export default function SignUpScreen() {
     if (sendError) {
       console.error("signUp.verifications.sendEmailCode error:", sendError);
       setSignUpError(sendError.message);
+      posthog.capture("sign_up_failed", { error_message: sendError.message });
       return;
     }
 
@@ -60,6 +64,13 @@ export default function SignUpScreen() {
 
     if (signUp.status === "complete") {
       await signUp.finalize();
+      const userId = signUp.createdUserId;
+      if (userId) {
+        posthog.identify(userId, {
+          $set_once: { sign_up_date: new Date().toISOString() },
+        });
+      }
+      posthog.capture("sign_up_completed");
       setShowVerification(false);
       router.replace("/" as Href);
     }
