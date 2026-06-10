@@ -2,6 +2,7 @@ import { useAuth, useUser, useClerk } from "@clerk/expo";
 import { Redirect, router, type Href } from "expo-router";
 import { View, Text, ActivityIndicator, Image } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { usePostHog } from "posthog-react-native";
 import Button from "@/components/ui/Button";
 import { useLanguageStore } from "@/store/use-language-store";
 import { getLanguageById } from "@/data/languages";
@@ -10,6 +11,7 @@ export default function Index() {
   const { isSignedIn, isLoaded } = useAuth();
   const { user } = useUser();
   const { signOut } = useClerk();
+  const posthog = usePostHog();
   const clearSelectedLanguage = useLanguageStore((state) => state.clearSelectedLanguage);
   const selectedLanguageId = useLanguageStore((state) => state.selectedLanguageId);
   const selectedLanguage = selectedLanguageId ? getLanguageById(selectedLanguageId) : null;
@@ -51,9 +53,18 @@ export default function Index() {
           className="mt-4"
         />
         <Button
+          title="Tabs"
+          onPress={() => router.push("/(tabs)" as Href)}
+          className="mt-4"
+        />
+        <Button
           title="Sign Out"
           variant="ghost"
-          onPress={() => signOut()}
+          onPress={() => {
+            posthog.capture("sign_out_completed");
+            posthog.reset();
+            signOut();
+          }}
           className="mt-2"
         />
         <Button

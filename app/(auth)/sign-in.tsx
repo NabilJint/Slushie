@@ -6,6 +6,7 @@ import VerificationCodeModal from "@/components/VerificationCodeModal";
 import Button from "@/components/ui/Button";
 import { useSignIn } from "@clerk/expo";
 import { router, type Href } from "expo-router";
+import { usePostHog } from "posthog-react-native";
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 import {
@@ -26,6 +27,7 @@ function isValidEmail(email: string): boolean {
 
 export default function SignInScreen() {
   const { signIn, fetchStatus } = useSignIn();
+  const posthog = usePostHog();
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [showVerification, setShowVerification] = useState(false);
@@ -46,6 +48,7 @@ export default function SignInScreen() {
     if (createError) {
       console.error("signIn.create error:", createError);
       setLoginError(createError.message);
+      posthog.capture("sign_in_failed", { error_message: createError.message });
       return;
     }
 
@@ -55,6 +58,7 @@ export default function SignInScreen() {
     if (sendError) {
       console.error("signIn.emailCode.sendCode error:", sendError);
       setLoginError(sendError.message);
+      posthog.capture("sign_in_failed", { error_message: sendError.message });
       return;
     }
 
@@ -71,6 +75,11 @@ export default function SignInScreen() {
 
     if (signIn.status === "complete") {
       await signIn.finalize();
+      const userId = signIn.createdSessionId;
+      if (userId) {
+        posthog.identify(userId);
+      }
+      posthog.capture("sign_in_completed");
       setShowVerification(false);
       router.replace("/" as Href);
     }
