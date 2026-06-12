@@ -46,9 +46,77 @@ function generateCallId(): string {
   return result;
 }
 
+async function generateAdminStreamToken(
+  secret: string,
+): Promise<string> {
+  const header = { alg: "HS256", typ: "JWT" };
+  const now = Math.floor(Date.now() / 1000);
+  const payload = {
+    user_id: "backend",
+    role: "admin",
+    exp: now + 300,
+    iat: now,
+  };
+
+  const encoder = new TextEncoder();
+  const headerB64 = base64url(encoder.encode(JSON.stringify(header)).buffer);
+  const payloadB64 = base64url(encoder.encode(JSON.stringify(payload)).buffer);
+
+  const key = await crypto.subtle.importKey(
+    "raw",
+    encoder.encode(secret).buffer,
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+
+  const signature = await crypto.subtle.sign(
+    "HMAC",
+    key,
+    encoder.encode(`${headerB64}.${payloadB64}`).buffer,
+  );
+
+  return `${headerB64}.${payloadB64}.${base64url(signature)}`;
+}
+
+async function createStreamCallWithAgent(
+  apiKey: string,
+  apiSecret: string,
+  callId: string,
+  lessonData: Record<string, unknown> | undefined,
+) {
+  try {
+    const adminToken = await generateAdminStreamToken(apiSecret);
+    await fetch(
+      `https://video.stream-io-api.com/video/v1/calls/audio_room/${callId}?api_key=${apiKey}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${adminToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          create: true,
+          members: [
+            { user_id: "ai-teacher", role: "admin" },
+          ],
+          custom: lessonData ?? {},
+        }),
+      },
+    );
+  } catch (err) {
+    console.error("Failed to create Stream call with agent", err);
+  }
+}
+
 export async function POST(request: Request) {
   try {
-    const { userId, userName, callId: providedCallId } = await request.json();
+    const {
+      userId,
+      userName,
+      callId: providedCallId,
+      lessonData,
+    } = await request.json();
 
     if (!userId) {
       return Response.json({ error: "userId is required" }, { status: 400 });
@@ -65,11 +133,14 @@ export async function POST(request: Request) {
 
     const token = await generateStreamToken(userId, apiSecret);
 
+    // Create the call via Stream REST API with agent as admin member and lesson custom data
+    await createStreamCallWithAgent(apiKey, apiSecret, callId, lessonData);
+
     return Response.json({
       apiKey,
       token,
       callId,
-      callType: "default",
+      callType: "audio_room",
       userId,
       userName: userName || userId,
     });

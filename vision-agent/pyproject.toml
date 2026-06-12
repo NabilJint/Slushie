@@ -1,0 +1,9 @@
+[project]
+name = "duolingo-vision-agent"
+version = "0.1.0"
+description = "AI language teacher voice agent for Duolingo Clone"
+requires-python = ">=3.12"
+dependencies = [
+    "vision-agents[getstream,gemini]>=0.1.0",
+    "python-dotenv>=1.0.0",
+]

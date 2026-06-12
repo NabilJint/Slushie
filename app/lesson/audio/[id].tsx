@@ -18,7 +18,7 @@ export default function AudioLessonScreen() {
     showSubtitles, setShowSubtitles, bubbleText, bubbleTranslation, status,
     speakingScore, pronunciationScore, grammarScore, showCongrats, setShowCongrats,
     label, micIcon, micBg, micLbl, micDisabled, handleMic, handleNext,
-    streamClient, streamCall, streamConnectionState, clerkUser,
+    streamClient, streamCall, streamConnectionState, agentStatus, clerkUser,
   } = useAudioSession(id ?? "");
 
   if (!lesson || !unit || !language) {
@@ -45,6 +45,18 @@ export default function AudioLessonScreen() {
     : streamConnectionState === "error" ? "Error"
     : "Offline";
 
+  const agentStatusColor =
+    agentStatus === "connected" ? "bg-mint-pop"
+    : agentStatus === "connecting" ? "bg-sunburst"
+    : agentStatus === "failed" ? "bg-ember"
+    : "bg-concrete-gray";
+
+  const agentStatusLabel =
+    agentStatus === "connected" ? "AI Active"
+    : agentStatus === "connecting" ? "AI Joining..."
+    : agentStatus === "failed" ? "AI Error"
+    : "AI Idle";
+
   const profileImage = clerkUser?.imageUrl;
   const profileInitial = (clerkUser?.fullName || clerkUser?.id || "?").charAt(0).toUpperCase();
 
@@ -63,11 +75,19 @@ export default function AudioLessonScreen() {
           </TouchableOpacity>
           <View>
             <Text className="font-display text-carbon text-lg font-bold">AI Teacher</Text>
-            <View className="flex-row items-center mt-0.5">
-              <View className={`w-2 h-2 rounded-full ${streamStatusColor} mr-1.5`} />
-              <Text className="font-body text-carbon/50 text-xs font-semibold uppercase tracking-wider">
-                {language.name} • {streamStatusLabel}
-              </Text>
+            <View className="flex-row items-center mt-0.5 gap-2">
+              <View className="flex-row items-center">
+                <View className={`w-2 h-2 rounded-full ${streamStatusColor} mr-1.5`} />
+                <Text className="font-body text-carbon/50 text-xs font-semibold uppercase tracking-wider">
+                  {language.name} • {streamStatusLabel}
+                </Text>
+              </View>
+              <View className="flex-row items-center">
+                <View className={`w-1.5 h-1.5 rounded-full ${agentStatusColor} mr-1`} />
+                <Text className="font-body text-carbon/40 text-[10px] font-semibold uppercase tracking-wider">
+                  {agentStatusLabel}
+                </Text>
+              </View>
             </View>
           </View>
         </View>

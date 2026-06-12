@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Alert } from "react-native";
 import { useUser } from "@clerk/expo";
 import {
@@ -11,6 +11,7 @@ import { getLanguageById } from "@/data/languages";
 import { getLessonById } from "@/data/lessons";
 import { getUnitById } from "@/data/units";
 import { useLessonStore } from "@/store/use-lesson-store";
+import type { Lesson } from "@/types/learning";
 
 export interface AudioStep {
   phrase: string;
@@ -18,6 +19,8 @@ export interface AudioStep {
   instruction: string;
   teacherPrompt: string;
 }
+
+export type AgentConnectionStatus = "idle" | "connecting" | "connected" | "failed";
 
 const SCORES = ["Excellent", "Great", "Good"] as const;
 type Score = (typeof SCORES)[number];
@@ -71,6 +74,51 @@ const buildSteps = (lesson: { title: string; description: string; activities: { 
   return r;
 };
 
+function packLessonData(
+  lesson: Lesson,
+  languageName: string,
+  languageCode: string,
+) {
+  const vocabularyItems: { word: string; translation: string; pronunciation?: string }[] = [];
+  const phrases: { phrase: string; translation: string }[] = [];
+
+  for (const act of lesson.activities) {
+    if (act.type === "vocabulary-intro" && act.items) {
+      for (const item of act.items) {
+        vocabularyItems.push({
+          word: item.word,
+          translation: item.translation,
+          pronunciation: item.pronunciation,
+        });
+      }
+    } else if (act.type === "speak" && "expectedResponse" in act) {
+      phrases.push({
+        phrase: (act as typeof act & { expectedResponse: string }).expectedResponse,
+        translation: act.instruction,
+      });
+    } else if (act.type === "listen-repeat" && "text" in act) {
+      phrases.push({
+        phrase: (act as typeof act & { text: string }).text,
+        translation: (act as typeof act & { translation: string }).translation || act.instruction,
+      });
+    }
+  }
+
+  return {
+    lessonId: lesson.id,
+    lessonTitle: lesson.title,
+    lessonDescription: lesson.description,
+    goals: lesson.goals.map((g) => g.description),
+    vocabularyItems,
+    phrases,
+    aiTeacherPrompt: lesson.aiTeacherPrompt,
+    language: {
+      name: languageName,
+      code: languageCode,
+    },
+  };
+}
+
 export function useAudioSession(id: string) {
   const lesson = getLessonById(id ?? "");
   const unit = lesson ? getUnitById(lesson.unitId) : undefined;
@@ -95,21 +143,73 @@ export function useAudioSession(id: string) {
   const [streamClient, setStreamClient] = useState<StreamVideoClient>();
   const [streamCall, setStreamCall] = useState<Call>();
   const [streamConnectionState, setStreamConnectionState] = useState<"idle" | "connecting" | "connected" | "error">("idle");
+  const [agentStatus, setAgentStatus] = useState<AgentConnectionStatus>("idle");
   const streamRef = useRef<{ client: StreamVideoClient; call: Call } | null>(null);
+  const agentStartedRef = useRef(false);
+
+  const startAgent = useCallback(async (callId: string, lessonData: ReturnType<typeof packLessonData>) => {
+    if (agentStartedRef.current) return;
+    agentStartedRef.current = true;
+
+    setAgentStatus("connecting");
+    try {
+      const res = await fetch("/api/stream/agent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "start",
+          callId,
+          lessonData,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Agent start request failed");
+      }
+
+      setAgentStatus("connected");
+    } catch (err) {
+      console.error("Failed to start AI teacher agent", err);
+      setAgentStatus("failed");
+    }
+  }, []);
+
+  const stopAgent = useCallback(async (callId: string) => {
+    if (!agentStartedRef.current) return;
+    agentStartedRef.current = false;
+
+    try {
+      await fetch("/api/stream/agent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "stop",
+          callId,
+        }),
+      });
+    } catch {
+      // Agent stop is best-effort cleanup
+    }
+  }, []);
+
+  const callIdRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!clerkUserId) return;
+    if (!clerkUserId || !lesson || !language) return;
 
     let cancelled = false;
 
     const initStream = async () => {
       try {
+        const lessonData = packLessonData(lesson, language.name, language.languageCode);
+
         const res = await fetch("/api/stream/session", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             userId: clerkUserId,
             userName: clerkUserName,
+            lessonData,
           }),
         });
 
@@ -117,6 +217,8 @@ export function useAudioSession(id: string) {
 
         const session = await res.json();
         if (cancelled) return;
+
+        callIdRef.current = session.callId;
 
         const streamUser: StreamUser = { id: session.userId, name: session.userName };
         const client = StreamVideoClient.getOrCreateInstance({
@@ -132,8 +234,12 @@ export function useAudioSession(id: string) {
 
         setStreamConnectionState("connecting");
         await call.join({ create: true });
+
+        await call.goLive({ start_recording: false });
+
         if (!cancelled) {
           setStreamConnectionState("connected");
+          startAgent(session.callId, lessonData);
         }
       } catch (err) {
         if (!cancelled) {
@@ -147,6 +253,10 @@ export function useAudioSession(id: string) {
 
     return () => {
       cancelled = true;
+      const currentCallId = callIdRef.current;
+      if (currentCallId) {
+        stopAgent(currentCallId);
+      }
       const ref = streamRef.current;
       if (ref) {
         if (ref.call.state.callingState !== CallingState.LEFT) {
@@ -158,8 +268,10 @@ export function useAudioSession(id: string) {
       setStreamClient(undefined);
       setStreamCall(undefined);
       setStreamConnectionState("idle");
+      setAgentStatus("idle");
+      agentStartedRef.current = false;
     };
-  }, [clerkUserId, clerkUserName]);
+  }, [clerkUserId, clerkUserName, lesson, language, startAgent, stopAgent]);
 
   useEffect(() => {
     if (!streamCall) return;
@@ -287,6 +399,7 @@ export function useAudioSession(id: string) {
     streamClient,
     streamCall,
     streamConnectionState,
+    agentStatus,
     clerkUser,
   };
 }
