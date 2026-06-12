@@ -85,27 +85,29 @@ async function createStreamCallWithAgent(
   callId: string,
   lessonData: Record<string, unknown> | undefined,
 ) {
-  try {
-    const adminToken = await generateAdminStreamToken(apiSecret);
-    await fetch(
-      `https://video.stream-io-api.com/video/v1/calls/audio_room/${callId}?api_key=${apiKey}`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${adminToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          create: true,
-          members: [
-            { user_id: "ai-teacher", role: "admin" },
-          ],
-          custom: lessonData ?? {},
-        }),
+  const adminToken = await generateAdminStreamToken(apiSecret);
+  const res = await fetch(
+    `https://video.stream-io-api.com/video/v1/calls/audio_room/${callId}?api_key=${apiKey}`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${adminToken}`,
+        "Content-Type": "application/json",
       },
-    );
-  } catch (err) {
-    console.error("Failed to create Stream call with agent", err);
+      body: JSON.stringify({
+        create: true,
+        members: [
+          { user_id: "ai-teacher", role: "admin" },
+        ],
+        custom: lessonData ?? {},
+      }),
+    },
+  );
+
+  if (!res.ok) {
+    const body = await res.text();
+    console.error("Failed to create Stream call with agent", res.status, body);
+    throw new Error(`Stream call creation failed: ${res.status} ${body}`);
   }
 }
 

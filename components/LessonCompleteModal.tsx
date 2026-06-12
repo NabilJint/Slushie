@@ -15,7 +15,7 @@ export default function LessonCompleteModal({
   onContinue,
 }: LessonCompleteModalProps) {
   return (
-    <Modal visible={visible} transparent animationType="fade">
+    <Modal visible={visible} transparent animationType="fade" onRequestClose={onContinue}>
       <View
         style={{
           flex: 1,

@@ -1,6 +1,6 @@
 # Preflight - probes for tracks A, B, C, E
 
-Three short probes you run once at the start of a session before any builder, CLI, or bootstrap work. **Track D (docs search) skips this file entirely** - pure docs answers must not touch the user's filesystem or shell.
+Four short probes you run once at the start of a session before any builder, CLI, or bootstrap work. **Track D (docs search) skips this file entirely** - pure docs answers must not touch the user's filesystem or shell.
 
 Run them in order. Stop and follow the recovery line if any step fails.
 

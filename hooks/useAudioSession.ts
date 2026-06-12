@@ -146,6 +146,7 @@ export function useAudioSession(id: string) {
   const [agentStatus, setAgentStatus] = useState<AgentConnectionStatus>("idle");
   const streamRef = useRef<{ client: StreamVideoClient; call: Call } | null>(null);
   const agentStartedRef = useRef(false);
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   const startAgent = useCallback(async (callId: string, lessonData: ReturnType<typeof packLessonData>) => {
     if (agentStartedRef.current) return;
@@ -253,6 +254,7 @@ export function useAudioSession(id: string) {
 
     return () => {
       cancelled = true;
+      clearTimers();
       const currentCallId = callIdRef.current;
       if (currentCallId) {
         stopAgent(currentCallId);
@@ -289,6 +291,20 @@ export function useAudioSession(id: string) {
 
   const step = steps[stepIndex] ?? steps[0];
 
+  const clearTimers = () => {
+    for (const t of timersRef.current) clearTimeout(t);
+    timersRef.current = [];
+  };
+
+  const setTimer = (fn: () => void, ms: number) => {
+    const id = setTimeout(() => {
+      timersRef.current = timersRef.current.filter((tid) => tid !== id);
+      fn();
+    }, ms);
+    timersRef.current.push(id);
+    return id;
+  };
+
   const go = (s: SessionStatus, text: string, trans?: string) => {
     setStatus(s);
     setBubbleText(text);
@@ -296,14 +312,14 @@ export function useAudioSession(id: string) {
   };
 
   useEffect(() => {
-    const t = setTimeout(() => {
+    const id = setTimer(() => {
       setStatus("speaking");
       if (steps.length > 0) {
         setBubbleText(steps[0].teacherPrompt);
         setBubbleTranslation(steps[0].translation);
       }
     }, 1500);
-    return () => clearTimeout(t);
+    return () => clearTimeout(id);
   }, [steps]);
 
   const handleMic = () => {
@@ -312,10 +328,12 @@ export function useAudioSession(id: string) {
       return;
     }
     if (status === "speaking") {
+      clearTimers();
       go("listening", `Speak now: "${step.phrase}"`, step.translation);
     } else if (status === "listening") {
+      clearTimers();
       go("processing", "Processing voice input...");
-      setTimeout(() => {
+      setTimer(() => {
         go("success", "¡Muy bien! That was great! 👏", "Very well! That was great!");
         setSpeakingScore(randScore());
         setPronunciationScore(randScore());

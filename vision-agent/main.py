@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -8,10 +9,31 @@ load_dotenv()
 load_dotenv(Path(__file__).parent.parent / ".env")
 
 HERE = Path(__file__).parent
+logger = logging.getLogger(__name__)
+
+DEFAULT_INSTRUCTIONS = (
+    "# Role\nYou are an AI language teacher. You are friendly, encouraging, and patient. "
+    "Your teaching style is playful, supportive, and focused on practical language skills.\n\n"
+    "# Language\nYou always speak English to the student.\n\n"
+    "# Teaching Approach\nGuide the student through vocabulary, pronunciation, and sentence construction. "
+    "Encourage repetition, correct gently, celebrate successes, and adapt to the student's pace."
+)
+
+
+def load_system_prompt() -> str:
+    path = HERE / "system.md"
+    try:
+        return path.read_text()
+    except FileNotFoundError:
+        logger.warning("system.md not found at %s; using fallback instructions", path)
+        return DEFAULT_INSTRUCTIONS
+    except PermissionError:
+        logger.error("Permission denied reading %s", path)
+        return DEFAULT_INSTRUCTIONS
 
 
 def build_instructions(lesson: dict | None) -> str:
-    base = (HERE / "system.md").read_text()
+    base = load_system_prompt()
 
     if not lesson:
         return base
@@ -85,9 +107,17 @@ async def join_call(agent: Agent, call_type: str, call_id: str, **kwargs) -> Non
     call = await agent.create_call(call_type, call_id)
 
     async with agent.join(call):
-        await call.go_live()
-        await agent.simple_response("Greet the student and start the language lesson based on the lesson context provided")
-        await agent.finish()
+        try:
+            await call.go_live()
+            await agent.simple_response(
+                "Greet the student and start the language lesson "
+                "based on the lesson context provided"
+            )
+        except Exception:
+            logger.exception("Error during AI teacher session")
+            raise
+        finally:
+            await agent.finish()
 
 
 if __name__ == "__main__":

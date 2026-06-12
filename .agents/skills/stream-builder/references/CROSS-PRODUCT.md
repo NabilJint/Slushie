@@ -134,7 +134,7 @@ import { StreamChat } from "stream-chat";
 
 const apiKey = process.env.STREAM_API_KEY!;
 const apiSecret = process.env.STREAM_API_SECRET!;
-const videoClient = new StreamClient(apiKey, apiSecret);
+const streamClient = new StreamClient(apiKey, apiSecret);
 const chatClient = StreamChat.getInstance(apiKey, apiSecret);
 
 export async function GET(req: NextRequest) {
@@ -144,7 +144,7 @@ export async function GET(req: NextRequest) {
   const sanitized = userId.toLowerCase().replace(/[^a-z0-9_-]/g, "_");
 
   await Promise.all([
-    videoClient.upsertUsers([{ id: sanitized, name: userId, role: "user" }]),
+    streamClient.upsertUsers([{ id: sanitized, name: userId, role: "user" }]),
     chatClient.upsertUsers([{ id: sanitized, name: userId, role: "user" }]),
   ]);
 
@@ -153,8 +153,8 @@ export async function GET(req: NextRequest) {
     userId: sanitized,
     name: userId,
     chatToken: chatClient.createToken(sanitized),
-    videoToken: videoClient.generateUserToken({ user_id: sanitized }),
-    feedToken: videoClient.generateUserToken({ user_id: sanitized }),
+    videoToken: streamClient.generateUserToken({ user_id: sanitized }),
+    feedToken: streamClient.generateUserToken({ user_id: sanitized }),
   });
 }
 ```

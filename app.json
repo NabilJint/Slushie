@@ -8,8 +8,7 @@
     "scheme": "duolingoclone",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "bundleIdentifier": "com.anonymous.duolingo-clone",
-      "developmentTeam": ""
+      "bundleIdentifier": "com.anonymous.duolingo-clone"
     },
     "android": {
       "adaptiveIcon": {
