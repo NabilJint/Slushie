@@ -12,10 +12,14 @@ export default function LessonDetailScreen() {
   const unit = lesson ? getUnitById(lesson.unitId) : null;
   const setLessonStatus = useLessonStore((state) => state.setLessonStatus);
 
-  const handleStartLesson = () => {
-    if (lesson) {
-      setLessonStatus(lesson.id, "in_progress");
-      router.push(`/lesson/audio/${lesson.id}`);
+  const handleStartLesson = async () => {
+    if (!lesson) return;
+    const prevStatus = useLessonStore.getState().getLessonStatus(lesson.id);
+    setLessonStatus(lesson.id, "in_progress");
+    try {
+      await router.push(`/lesson/audio/${lesson.id}`);
+    } catch {
+      setLessonStatus(lesson.id, prevStatus ?? "not_started");
     }
   };
 
