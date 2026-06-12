@@ -2,6 +2,7 @@ import { Alert, Image, SafeAreaView, Text, TouchableOpacity, View } from "react-
 import { StatusBar } from "expo-status-bar";
 import { router, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { StreamCall, StreamVideo } from "@stream-io/video-react-native-sdk";
 import { colors } from "@/constants/theme";
 import { images } from "@/constants/images";
 import { useAudioSession } from "@/hooks/useAudioSession";
@@ -17,6 +18,7 @@ export default function AudioLessonScreen() {
     showSubtitles, setShowSubtitles, bubbleText, bubbleTranslation, status,
     speakingScore, pronunciationScore, grammarScore, showCongrats, setShowCongrats,
     label, micIcon, micBg, micLbl, micDisabled, handleMic, handleNext,
+    streamClient, streamCall, streamConnectionState, clerkUser,
   } = useAudioSession(id ?? "");
 
   if (!lesson || !unit || !language) {
@@ -31,7 +33,22 @@ export default function AudioLessonScreen() {
     );
   }
 
-  return (
+  const streamStatusColor =
+    streamConnectionState === "connected" ? "bg-mint-pop"
+    : streamConnectionState === "connecting" ? "bg-sunburst"
+    : streamConnectionState === "error" ? "bg-ember"
+    : "bg-concrete-gray";
+
+  const streamStatusLabel =
+    streamConnectionState === "connected" ? "Connected"
+    : streamConnectionState === "connecting" ? "Connecting..."
+    : streamConnectionState === "error" ? "Error"
+    : "Offline";
+
+  const profileImage = clerkUser?.imageUrl;
+  const profileInitial = (clerkUser?.fullName || clerkUser?.id || "?").charAt(0).toUpperCase();
+
+  const content = (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.paperWhite }}>
       <StatusBar style="dark" />
       <View className="flex-row items-center justify-between px-6 pt-2 pb-4 border-b border-carbon/10">
@@ -47,9 +64,9 @@ export default function AudioLessonScreen() {
           <View>
             <Text className="font-display text-carbon text-lg font-bold">AI Teacher</Text>
             <View className="flex-row items-center mt-0.5">
-              <View className="w-2 h-2 rounded-full bg-mint-pop mr-1.5" />
+              <View className={`w-2 h-2 rounded-full ${streamStatusColor} mr-1.5`} />
               <Text className="font-body text-carbon/50 text-xs font-semibold uppercase tracking-wider">
-                {language.name} • Online
+                {language.name} • {streamStatusLabel}
               </Text>
             </View>
           </View>
@@ -63,8 +80,12 @@ export default function AudioLessonScreen() {
           <View className="w-10 h-10 rounded-full border border-carbon items-center justify-center bg-paper-white">
             <Text className="font-display text-carbon text-xs font-bold">{lesson.xpReward}</Text>
           </View>
-          <View className="w-10 h-10 rounded-full border border-carbon items-center justify-center bg-paper-white">
-            <Ionicons name="person" size={16} color={colors.carbon} />
+          <View className="w-10 h-10 rounded-full border border-carbon items-center justify-center bg-paper-white overflow-hidden">
+            {profileImage ? (
+              <Image source={{ uri: profileImage }} className="w-full h-full" />
+            ) : (
+              <Text className="font-display text-carbon text-xs font-bold">{profileInitial}</Text>
+            )}
           </View>
         </View>
       </View>
@@ -147,4 +168,16 @@ export default function AudioLessonScreen() {
       />
     </SafeAreaView>
   );
+
+  if (streamClient && streamCall) {
+    return (
+      <StreamVideo client={streamClient}>
+        <StreamCall call={streamCall}>
+          {content}
+        </StreamCall>
+      </StreamVideo>
+    );
+  }
+
+  return content;
 }

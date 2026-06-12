@@ -1,5 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Alert } from "react-native";
+import { useUser } from "@clerk/expo";
+import {
+  CallingState,
+  StreamVideoClient,
+  type Call,
+  type User as StreamUser,
+} from "@stream-io/video-react-native-sdk";
 import { getLanguageById } from "@/data/languages";
 import { getLessonById } from "@/data/lessons";
 import { getUnitById } from "@/data/units";
@@ -81,6 +88,87 @@ export function useAudioSession(id: string) {
   const [pronunciationScore, setPronunciationScore] = useState<Score>("Great");
   const [grammarScore, setGrammarScore] = useState<Score>("Good");
   const [showCongrats, setShowCongrats] = useState(false);
+
+  const { user: clerkUser } = useUser();
+  const clerkUserId = clerkUser?.id;
+  const clerkUserName = clerkUser?.fullName || clerkUser?.id;
+  const [streamClient, setStreamClient] = useState<StreamVideoClient>();
+  const [streamCall, setStreamCall] = useState<Call>();
+  const [streamConnectionState, setStreamConnectionState] = useState<"idle" | "connecting" | "connected" | "error">("idle");
+  const streamRef = useRef<{ client: StreamVideoClient; call: Call } | null>(null);
+
+  useEffect(() => {
+    if (!clerkUserId) return;
+
+    let cancelled = false;
+
+    const initStream = async () => {
+      try {
+        const res = await fetch("/api/stream/session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: clerkUserId,
+            userName: clerkUserName,
+          }),
+        });
+
+        if (!res.ok) throw new Error("Failed to create Stream session");
+
+        const session = await res.json();
+        if (cancelled) return;
+
+        const streamUser: StreamUser = { id: session.userId, name: session.userName };
+        const client = StreamVideoClient.getOrCreateInstance({
+          apiKey: session.apiKey,
+          user: streamUser,
+          token: session.token,
+        });
+        setStreamClient(client);
+
+        const call = client.call(session.callType, session.callId, { reuseInstance: true });
+        setStreamCall(call);
+        streamRef.current = { client, call };
+
+        setStreamConnectionState("connecting");
+        await call.join({ create: true });
+        if (!cancelled) {
+          setStreamConnectionState("connected");
+        }
+      } catch (err) {
+        if (!cancelled) {
+          console.error("Stream init failed", err);
+          setStreamConnectionState("error");
+        }
+      }
+    };
+
+    initStream();
+
+    return () => {
+      cancelled = true;
+      const ref = streamRef.current;
+      if (ref) {
+        if (ref.call.state.callingState !== CallingState.LEFT) {
+          ref.call.leave().catch(() => {});
+        }
+        ref.client.disconnectUser(5000).catch(() => {});
+        streamRef.current = null;
+      }
+      setStreamClient(undefined);
+      setStreamCall(undefined);
+      setStreamConnectionState("idle");
+    };
+  }, [clerkUserId, clerkUserName]);
+
+  useEffect(() => {
+    if (!streamCall) return;
+    if (isMuted) {
+      streamCall.microphone.disable().catch(() => {});
+    } else {
+      streamCall.microphone.enable().catch(() => {});
+    }
+  }, [isMuted, streamCall]);
 
   const steps = useMemo(() => {
     if (!lesson) return [];
@@ -196,5 +284,9 @@ export function useAudioSession(id: string) {
     handleMic,
     handleNext,
     setLessonStatus,
+    streamClient,
+    streamCall,
+    streamConnectionState,
+    clerkUser,
   };
 }
