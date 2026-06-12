@@ -128,6 +128,7 @@ export interface Lesson {
   goals: LessonGoal[];
   activities: Activity[];
   aiTeacherPrompt?: AITeacherPrompt;
+  sticker?: string;
   xpReward: number;
   estimatedMinutes: number;
 }

@@ -1114,6 +1114,683 @@ export const lessons: Lesson[] = [
       },
     ],
   },
+  // ── Japanese Unit 1: Basics ──────────────────────────────────────────
+  // Lesson 1: Greetings
+  {
+    id: "ja-basics-1-lesson-1",
+    unitId: "ja-basics-1",
+    title: "こんにちは",
+    description: "Learn basic Japanese greetings.",
+    order: 1,
+    xpReward: 10,
+    estimatedMinutes: 5,
+    sticker: "🗾",
+    goals: [
+      {
+        id: "ja-b1-l1-g1",
+        description: "Greet someone in Japanese",
+        vocabularyIds: ["ja-vocab-konnichiwa", "ja-vocab-ohayou", "ja-vocab-konbanwa"],
+      },
+    ],
+    activities: [
+      {
+        id: "ja-b1-l1-a1",
+        type: "vocabulary-intro",
+        instruction: "Tap each word to hear it and learn its meaning.",
+        items: [
+          { id: "ja-vocab-konnichiwa", word: "こんにちは", translation: "Hello / Good afternoon", pronunciation: "kon-nee-chee-wah" },
+          { id: "ja-vocab-ohayou", word: "おはよう", translation: "Good morning", pronunciation: "oh-hah-yoh" },
+          { id: "ja-vocab-konbanwa", word: "こんばんは", translation: "Good evening", pronunciation: "kon-bahn-wah" },
+        ],
+      },
+      {
+        id: "ja-b1-l1-a2",
+        type: "multiple-choice",
+        instruction: "What does こんにちは mean?",
+        prompt: "What does こんにちは mean?",
+        options: [
+          { id: "ja-b1-l1-a2-o1", text: "Goodbye", isCorrect: false },
+          { id: "ja-b1-l1-a2-o2", text: "Hello", isCorrect: true },
+          { id: "ja-b1-l1-a2-o3", text: "Thank you", isCorrect: false },
+          { id: "ja-b1-l1-a2-o4", text: "Sorry", isCorrect: false },
+        ],
+      },
+      {
+        id: "ja-b1-l1-a3",
+        type: "match-pairs",
+        instruction: "Match each Japanese greeting to its meaning.",
+        pairs: [
+          { id: "ja-b1-l1-a3-p1", left: "こんにちは", right: "Hello" },
+          { id: "ja-b1-l1-a3-p2", left: "おはよう", right: "Good morning" },
+          { id: "ja-b1-l1-a3-p3", left: "こんばんは", right: "Good evening" },
+        ],
+      },
+    ],
+    aiTeacherPrompt: {
+      contextPrompt: "Teach basic Japanese greetings: こんにちは, おはよう, こんばんは. Explain that Japanese uses different greetings for different times of day.",
+      voiceStyle: "warm, clear, slightly formal",
+      visualCues: ["Japanese flag", "bow gesture", "sunrise"],
+    },
+  },
+  // Lesson 2: Self-Introduction
+  {
+    id: "ja-basics-1-lesson-2",
+    unitId: "ja-basics-1",
+    title: "自己紹介",
+    description: "Introduce yourself in Japanese.",
+    order: 2,
+    xpReward: 10,
+    estimatedMinutes: 5,
+    sticker: "🙇",
+    goals: [
+      {
+        id: "ja-b1-l2-g1",
+        description: "Introduce yourself and ask someone's name",
+        vocabularyIds: ["ja-vocab-watashi-wa", "ja-vocab-hajimemashite", "ja-vocab-yoroshiku"],
+      },
+    ],
+    activities: [
+      {
+        id: "ja-b1-l2-a1",
+        type: "vocabulary-intro",
+        instruction: "Learn phrases for introducing yourself.",
+        items: [
+          { id: "ja-vocab-watashi-wa", word: "わたしは〜です", translation: "I am ~", pronunciation: "wah-tah-shee wah ~ dess" },
+          { id: "ja-vocab-hajimemashite", word: "はじめまして", translation: "Nice to meet you (first time)", pronunciation: "hah-jee-meh-mah-shee-teh" },
+          { id: "ja-vocab-yoroshiku", word: "よろしくおねがいします", translation: "Please look after me", pronunciation: "yoh-roh-shee-ku oh-neh-gah-ee shee-mahs" },
+        ],
+      },
+      {
+        id: "ja-b1-l2-a2",
+        type: "translate",
+        instruction: "Translate to Japanese.",
+        sourceText: "I am Yuki.",
+        targetLanguage: "Japanese",
+        correctAnswer: "わたしはYukiです。",
+        acceptableAnswers: ["わたしはゆきです", "わたしはYukiです", "わたしはゆきです。"],
+      },
+    ],
+    aiTeacherPrompt: {
+      contextPrompt: "Teach self-introduction in Japanese: わたしは〜です, はじめまして, よろしくおねがいします.",
+      voiceStyle: "polite, friendly",
+      visualCues: ["bow", "name tag"],
+    },
+  },
+  // Lesson 3: Polite Expressions
+  {
+    id: "ja-basics-1-lesson-3",
+    unitId: "ja-basics-1",
+    title: "すみません",
+    description: "Learn polite expressions in Japanese.",
+    order: 3,
+    xpReward: 10,
+    estimatedMinutes: 5,
+    sticker: "🙏",
+    goals: [
+      {
+        id: "ja-b1-l3-g1",
+        description: "Use polite expressions in Japanese",
+        vocabularyIds: ["ja-vocab-sumimasen", "ja-vocab-arigatou", "ja-vocab-douitashimashite"],
+      },
+    ],
+    activities: [
+      {
+        id: "ja-b1-l3-a1",
+        type: "vocabulary-intro",
+        instruction: "Learn polite Japanese phrases.",
+        items: [
+          { id: "ja-vocab-sumimasen", word: "すみません", translation: "Excuse me / Sorry", pronunciation: "soo-mee-mah-sen" },
+          { id: "ja-vocab-arigatou", word: "ありがとう", translation: "Thank you", pronunciation: "ah-ree-gah-toh" },
+          { id: "ja-vocab-douitashimashite", word: "どういたしまして", translation: "You're welcome", pronunciation: "doh-ee-tah-shee-mah-shi-teh" },
+        ],
+      },
+      {
+        id: "ja-b1-l3-a2",
+        type: "multiple-choice",
+        instruction: "What does ありがとう mean?",
+        prompt: "What does ありがとう mean?",
+        options: [
+          { id: "ja-b1-l3-a2-o1", text: "Sorry", isCorrect: false },
+          { id: "ja-b1-l3-a2-o2", text: "Please", isCorrect: false },
+          { id: "ja-b1-l3-a2-o3", text: "Thank you", isCorrect: true },
+          { id: "ja-b1-l3-a2-o4", text: "Hello", isCorrect: false },
+        ],
+      },
+    ],
+  },
+  // Lesson 4: Basic Questions
+  {
+    id: "ja-basics-1-lesson-4",
+    unitId: "ja-basics-1",
+    title: "これは何ですか",
+    description: "Ask and answer simple questions.",
+    order: 4,
+    xpReward: 10,
+    estimatedMinutes: 5,
+    sticker: "❓",
+    goals: [
+      {
+        id: "ja-b1-l4-g1",
+        description: "Ask 'what is this?' in Japanese",
+        vocabularyIds: ["ja-vocab-kore-wa", "ja-vocab-nan-desu-ka", "ja-vocab-sore-wa"],
+      },
+    ],
+    activities: [
+      {
+        id: "ja-b1-l4-a1",
+        type: "vocabulary-intro",
+        instruction: "Learn question phrases in Japanese.",
+        items: [
+          { id: "ja-vocab-kore-wa", word: "これは", translation: "This is...", pronunciation: "koh-reh wah" },
+          { id: "ja-vocab-nan-desu-ka", word: "何ですか", translation: "What is it?", pronunciation: "nahn dess kah" },
+          { id: "ja-vocab-sore-wa", word: "それは", translation: "That is...", pronunciation: "soh-reh wah" },
+        ],
+      },
+      {
+        id: "ja-b1-l4-a2",
+        type: "translate",
+        instruction: "Translate to Japanese.",
+        sourceText: "What is this?",
+        targetLanguage: "Japanese",
+        correctAnswer: "これは何ですか。",
+        acceptableAnswers: ["これは何ですか", "これはなんですか", "これは何ですか。"],
+      },
+    ],
+  },
+  // Lesson 5: Numbers
+  {
+    id: "ja-basics-1-lesson-5",
+    unitId: "ja-basics-1",
+    title: "数字",
+    description: "Learn numbers 1-10 in Japanese.",
+    order: 5,
+    xpReward: 10,
+    estimatedMinutes: 5,
+    sticker: "🔢",
+    goals: [
+      {
+        id: "ja-b1-l5-g1",
+        description: "Count from 1 to 10 in Japanese",
+        vocabularyIds: ["ja-vocab-ichi", "ja-vocab-ni", "ja-vocab-san", "ja-vocab-juu"],
+      },
+    ],
+    activities: [
+      {
+        id: "ja-b1-l5-a1",
+        type: "vocabulary-intro",
+        instruction: "Learn numbers 1-10 in Japanese.",
+        items: [
+          { id: "ja-vocab-ichi", word: "いち", translation: "1 (one)", pronunciation: "ee-chee" },
+          { id: "ja-vocab-ni", word: "に", translation: "2 (two)", pronunciation: "nee" },
+          { id: "ja-vocab-san", word: "さん", translation: "3 (three)", pronunciation: "sahn" },
+          { id: "ja-vocab-juu", word: "じゅう", translation: "10 (ten)", pronunciation: "joo" },
+        ],
+      },
+      {
+        id: "ja-b1-l5-a2",
+        type: "multiple-choice",
+        instruction: "What does さん mean?",
+        prompt: "What does さん mean?",
+        options: [
+          { id: "ja-b1-l5-a2-o1", text: "One", isCorrect: false },
+          { id: "ja-b1-l5-a2-o2", text: "Two", isCorrect: false },
+          { id: "ja-b1-l5-a2-o3", text: "Three", isCorrect: true },
+          { id: "ja-b1-l5-a2-o4", text: "Ten", isCorrect: false },
+        ],
+      },
+    ],
+  },
+
+  // ── Korean Unit 1: Basics ────────────────────────────────────────────
+  // Lesson 1: Greetings
+  {
+    id: "ko-basics-1-lesson-1",
+    unitId: "ko-basics-1",
+    title: "안녕하세요",
+    description: "Learn basic Korean greetings.",
+    order: 1,
+    xpReward: 10,
+    estimatedMinutes: 5,
+    sticker: "🇰🇷",
+    goals: [
+      {
+        id: "ko-b1-l1-g1",
+        description: "Greet someone in Korean",
+        vocabularyIds: ["ko-vocab-annyeonghaseyo", "ko-vocab-annyeong", "ko-vocab-jal-ja"],
+      },
+    ],
+    activities: [
+      {
+        id: "ko-b1-l1-a1",
+        type: "vocabulary-intro",
+        instruction: "Tap each word to hear it and learn its meaning.",
+        items: [
+          { id: "ko-vocab-annyeonghaseyo", word: "안녕하세요", translation: "Hello (formal)", pronunciation: "ahn-nyeong-hah-seh-yo" },
+          { id: "ko-vocab-annyeong", word: "안녕", translation: "Hi / Bye (informal)", pronunciation: "ahn-nyeong" },
+          { id: "ko-vocab-jal-ja", word: "잘 자", translation: "Good night", pronunciation: "jal ja" },
+        ],
+      },
+      {
+        id: "ko-b1-l1-a2",
+        type: "multiple-choice",
+        instruction: "What does 안녕하세요 mean?",
+        prompt: "What does 안녕하세요 mean?",
+        options: [
+          { id: "ko-b1-l1-a2-o1", text: "Goodbye", isCorrect: false },
+          { id: "ko-b1-l1-a2-o2", text: "Hello (formal)", isCorrect: true },
+          { id: "ko-b1-l1-a2-o3", text: "Thank you", isCorrect: false },
+          { id: "ko-b1-l1-a2-o4", text: "Sorry", isCorrect: false },
+        ],
+      },
+      {
+        id: "ko-b1-l1-a3",
+        type: "match-pairs",
+        instruction: "Match each Korean greeting to its meaning.",
+        pairs: [
+          { id: "ko-b1-l1-a3-p1", left: "안녕하세요", right: "Hello (formal)" },
+          { id: "ko-b1-l1-a3-p2", left: "안녕", right: "Hi (informal)" },
+          { id: "ko-b1-l1-a3-p3", left: "잘 자", right: "Good night" },
+        ],
+      },
+    ],
+    aiTeacherPrompt: {
+      contextPrompt: "Teach basic Korean greetings: 안녕하세요, 안녕, 잘 자. Explain formal vs informal speech levels.",
+      voiceStyle: "warm, clear, upbeat",
+      visualCues: ["Korean flag", "bow", "wave"],
+    },
+  },
+  // Lesson 2: Self-Introduction
+  {
+    id: "ko-basics-1-lesson-2",
+    unitId: "ko-basics-1",
+    title: "자기 소개",
+    description: "Introduce yourself in Korean.",
+    order: 2,
+    xpReward: 10,
+    estimatedMinutes: 5,
+    sticker: "🙇",
+    goals: [
+      {
+        id: "ko-b1-l2-g1",
+        description: "Introduce yourself in Korean",
+        vocabularyIds: ["ko-vocab-jeoneun", "ko-vocab-imnida", "ko-vocab-banga"],
+      },
+    ],
+    activities: [
+      {
+        id: "ko-b1-l2-a1",
+        type: "vocabulary-intro",
+        instruction: "Learn phrases for introducing yourself.",
+        items: [
+          { id: "ko-vocab-jeoneun", word: "저는", translation: "I (formal)", pronunciation: "jeo-neun" },
+          { id: "ko-vocab-imnida", word: "입니다", translation: "am / is (formal)", pronunciation: "im-nee-dah" },
+          { id: "ko-vocab-banga", word: "반갑습니다", translation: "Nice to meet you", pronunciation: "ban-gap-seum-nee-dah" },
+        ],
+      },
+      {
+        id: "ko-b1-l2-a2",
+        type: "translate",
+        instruction: "Translate to Korean.",
+        sourceText: "I am Minho.",
+        targetLanguage: "Korean",
+        correctAnswer: "저는 Minho입니다.",
+        acceptableAnswers: ["저는 민호입니다", "저는 Minho입니다", "저는 민호입니다."],
+      },
+    ],
+    aiTeacherPrompt: {
+      contextPrompt: "Teach self-introduction in Korean: 저는 ~입니다, 반갑습니다.",
+      voiceStyle: "polite, friendly",
+      visualCues: ["bow", "name tag"],
+    },
+  },
+  // Lesson 3: Polite Expressions
+  {
+    id: "ko-basics-1-lesson-3",
+    unitId: "ko-basics-1",
+    title: "감사합니다",
+    description: "Learn polite expressions in Korean.",
+    order: 3,
+    xpReward: 10,
+    estimatedMinutes: 5,
+    sticker: "🙏",
+    goals: [
+      {
+        id: "ko-b1-l3-g1",
+        description: "Use polite expressions in Korean",
+        vocabularyIds: ["ko-vocab-gamsahamnida", "ko-vocab-joesonghamnida", "ko-vocab-gwaenchanh"],
+      },
+    ],
+    activities: [
+      {
+        id: "ko-b1-l3-a1",
+        type: "vocabulary-intro",
+        instruction: "Learn polite Korean phrases.",
+        items: [
+          { id: "ko-vocab-gamsahamnida", word: "감사합니다", translation: "Thank you", pronunciation: "gam-sa-ham-nee-dah" },
+          { id: "ko-vocab-joesonghamnida", word: "죄송합니다", translation: "I'm sorry", pronunciation: "joe-song-ham-nee-dah" },
+          { id: "ko-vocab-gwaenchanh", word: "괜찮아요", translation: "It's okay / You're welcome", pronunciation: "gwaen-chan-ah-yo" },
+        ],
+      },
+      {
+        id: "ko-b1-l3-a2",
+        type: "fill-blank",
+        instruction: "Fill in the blank to say thank you.",
+        sentenceTemplate: "_____합니다.",
+        correctAnswer: "감사",
+        acceptableAnswers: ["감사", "감사합니다"],
+        hint: "The polite word for 'thank you'.",
+      },
+    ],
+  },
+  // Lesson 4: Basic Questions
+  {
+    id: "ko-basics-1-lesson-4",
+    unitId: "ko-basics-1",
+    title: "어디예요?",
+    description: "Ask simple questions in Korean.",
+    order: 4,
+    xpReward: 10,
+    estimatedMinutes: 5,
+    sticker: "❓",
+    goals: [
+      {
+        id: "ko-b1-l4-g1",
+        description: "Ask 'where is it?' in Korean",
+        vocabularyIds: ["ko-vocab-eodi", "ko-vocab-yeyo", "ko-vocab-hwajangsil"],
+      },
+    ],
+    activities: [
+      {
+        id: "ko-b1-l4-a1",
+        type: "vocabulary-intro",
+        instruction: "Learn question phrases in Korean.",
+        items: [
+          { id: "ko-vocab-eodi", word: "어디", translation: "Where", pronunciation: "eo-di" },
+          { id: "ko-vocab-yeyo", word: "예요?", translation: "is it? (question ending)", pronunciation: "yeh-yo" },
+          { id: "ko-vocab-hwajangsil", word: "화장실", translation: "bathroom", pronunciation: "hwa-jang-shil" },
+        ],
+      },
+      {
+        id: "ko-b1-l4-a2",
+        type: "translate",
+        instruction: "Translate to Korean.",
+        sourceText: "Where is the bathroom?",
+        targetLanguage: "Korean",
+        correctAnswer: "화장실이 어디예요?",
+        acceptableAnswers: ["화장실이 어디예요", "화장실 어디예요?", "화장실 어디예요"],
+      },
+    ],
+  },
+  // Lesson 5: Numbers
+  {
+    id: "ko-basics-1-lesson-5",
+    unitId: "ko-basics-1",
+    title: "숫자",
+    description: "Learn numbers 1-10 in Korean.",
+    order: 5,
+    xpReward: 10,
+    estimatedMinutes: 5,
+    sticker: "🔢",
+    goals: [
+      {
+        id: "ko-b1-l5-g1",
+        description: "Count from 1 to 10 in Korean",
+        vocabularyIds: ["ko-vocab-hana", "ko-vocab-dul", "ko-vocab-set", "ko-vocab-yeol"],
+      },
+    ],
+    activities: [
+      {
+        id: "ko-b1-l5-a1",
+        type: "vocabulary-intro",
+        instruction: "Learn numbers 1-10 in Korean (native Korean).",
+        items: [
+          { id: "ko-vocab-hana", word: "하나", translation: "1 (one)", pronunciation: "ha-na" },
+          { id: "ko-vocab-dul", word: "둘", translation: "2 (two)", pronunciation: "dul" },
+          { id: "ko-vocab-set", word: "셋", translation: "3 (three)", pronunciation: "set" },
+          { id: "ko-vocab-yeol", word: "열", translation: "10 (ten)", pronunciation: "yeol" },
+        ],
+      },
+      {
+        id: "ko-b1-l5-a2",
+        type: "multiple-choice",
+        instruction: "What does 셋 mean?",
+        prompt: "What does 셋 mean?",
+        options: [
+          { id: "ko-b1-l5-a2-o1", text: "One", isCorrect: false },
+          { id: "ko-b1-l5-a2-o2", text: "Two", isCorrect: false },
+          { id: "ko-b1-l5-a2-o3", text: "Three", isCorrect: true },
+          { id: "ko-b1-l5-a2-o4", text: "Ten", isCorrect: false },
+        ],
+      },
+    ],
+  },
+
+  // ── Chinese Unit 1: Basics ───────────────────────────────────────────
+  // Lesson 1: Greetings
+  {
+    id: "zh-basics-1-lesson-1",
+    unitId: "zh-basics-1",
+    title: "你好",
+    description: "Learn basic Chinese greetings.",
+    order: 1,
+    xpReward: 10,
+    estimatedMinutes: 5,
+    sticker: "🇨🇳",
+    goals: [
+      {
+        id: "zh-b1-l1-g1",
+        description: "Greet someone in Chinese",
+        vocabularyIds: ["zh-vocab-ni-hao", "zh-vocab-zao-shang-hao", "zh-vocab-wan-shang-hao"],
+      },
+    ],
+    activities: [
+      {
+        id: "zh-b1-l1-a1",
+        type: "vocabulary-intro",
+        instruction: "Tap each word to hear it and learn its meaning.",
+        items: [
+          { id: "zh-vocab-ni-hao", word: "你好", translation: "Hello", pronunciation: "nee how" },
+          { id: "zh-vocab-zao-shang-hao", word: "早上好", translation: "Good morning", pronunciation: "zao-shang how" },
+          { id: "zh-vocab-wan-shang-hao", word: "晚上好", translation: "Good evening", pronunciation: "wan-shang how" },
+        ],
+      },
+      {
+        id: "zh-b1-l1-a2",
+        type: "multiple-choice",
+        instruction: "What does 你好 mean?",
+        prompt: "What does 你好 mean?",
+        options: [
+          { id: "zh-b1-l1-a2-o1", text: "Goodbye", isCorrect: false },
+          { id: "zh-b1-l1-a2-o2", text: "Hello", isCorrect: true },
+          { id: "zh-b1-l1-a2-o3", text: "Thank you", isCorrect: false },
+          { id: "zh-b1-l1-a2-o4", text: "Sorry", isCorrect: false },
+        ],
+      },
+      {
+        id: "zh-b1-l1-a3",
+        type: "match-pairs",
+        instruction: "Match each Chinese greeting to its meaning.",
+        pairs: [
+          { id: "zh-b1-l1-a3-p1", left: "你好", right: "Hello" },
+          { id: "zh-b1-l1-a3-p2", left: "早上好", right: "Good morning" },
+          { id: "zh-b1-l1-a3-p3", left: "晚上好", right: "Good evening" },
+        ],
+      },
+    ],
+    aiTeacherPrompt: {
+      contextPrompt: "Teach basic Chinese greetings: 你好, 早上好, 晚上好. Chinese is a tonal language so pronunciation is key.",
+      voiceStyle: "warm, clear, emphasizing tones",
+      visualCues: ["Chinese flag", "wave", "sunrise"],
+    },
+  },
+  // Lesson 2: Self-Introduction
+  {
+    id: "zh-basics-1-lesson-2",
+    unitId: "zh-basics-1",
+    title: "我叫...",
+    description: "Introduce yourself in Chinese.",
+    order: 2,
+    xpReward: 10,
+    estimatedMinutes: 5,
+    sticker: "🙇",
+    goals: [
+      {
+        id: "zh-b1-l2-g1",
+        description: "Introduce yourself in Chinese",
+        vocabularyIds: ["zh-vocab-wo-jiao", "zh-vocab-ni-jiao-shenme", "zh-vocab-renshi-ni"],
+      },
+    ],
+    activities: [
+      {
+        id: "zh-b1-l2-a1",
+        type: "vocabulary-intro",
+        instruction: "Learn phrases for introducing yourself.",
+        items: [
+          { id: "zh-vocab-wo-jiao", word: "我叫", translation: "My name is (I am called)", pronunciation: "wo jyao" },
+          { id: "zh-vocab-ni-jiao-shenme", word: "你叫什么？", translation: "What's your name?", pronunciation: "nee jyao shen-muh" },
+          { id: "zh-vocab-renshi-ni", word: "认识你很高兴", translation: "Nice to meet you", pronunciation: "ren-shi nee hen gao-xing" },
+        ],
+      },
+      {
+        id: "zh-b1-l2-a2",
+        type: "translate",
+        instruction: "Translate to Chinese.",
+        sourceText: "My name is Li Wei.",
+        targetLanguage: "Chinese",
+        correctAnswer: "我叫李伟。",
+        acceptableAnswers: ["我叫李伟", "我叫 li wei", "我叫Li Wei。"],
+      },
+    ],
+    aiTeacherPrompt: {
+      contextPrompt: "Teach self-introduction in Chinese: 我叫..., 你叫什么？, 认识你很高兴.",
+      voiceStyle: "friendly, patient",
+      visualCues: ["name tag", "handshake"],
+    },
+  },
+  // Lesson 3: Polite Expressions
+  {
+    id: "zh-basics-1-lesson-3",
+    unitId: "zh-basics-1",
+    title: "谢谢",
+    description: "Learn polite expressions in Chinese.",
+    order: 3,
+    xpReward: 10,
+    estimatedMinutes: 5,
+    sticker: "🙏",
+    goals: [
+      {
+        id: "zh-b1-l3-g1",
+        description: "Use polite expressions in Chinese",
+        vocabularyIds: ["zh-vocab-xie-xie", "zh-vocab-bu-ke-qi", "zh-vocab-dui-bu-qi"],
+      },
+    ],
+    activities: [
+      {
+        id: "zh-b1-l3-a1",
+        type: "vocabulary-intro",
+        instruction: "Learn polite Chinese phrases.",
+        items: [
+          { id: "zh-vocab-xie-xie", word: "谢谢", translation: "Thank you", pronunciation: "shyeh-shyeh" },
+          { id: "zh-vocab-bu-ke-qi", word: "不客气", translation: "You're welcome", pronunciation: "boo kuh-chee" },
+          { id: "zh-vocab-dui-bu-qi", word: "对不起", translation: "Sorry", pronunciation: "dway-boo-chee" },
+        ],
+      },
+      {
+        id: "zh-b1-l3-a2",
+        type: "multiple-choice",
+        instruction: "What does 谢谢 mean?",
+        prompt: "What does 谢谢 mean?",
+        options: [
+          { id: "zh-b1-l3-a2-o1", text: "Sorry", isCorrect: false },
+          { id: "zh-b1-l3-a2-o2", text: "Please", isCorrect: false },
+          { id: "zh-b1-l3-a2-o3", text: "Thank you", isCorrect: true },
+          { id: "zh-b1-l3-a2-o4", text: "Hello", isCorrect: false },
+        ],
+      },
+    ],
+  },
+  // Lesson 4: Basic Questions
+  {
+    id: "zh-basics-1-lesson-4",
+    unitId: "zh-basics-1",
+    title: "这是什么？",
+    description: "Ask and answer simple questions.",
+    order: 4,
+    xpReward: 10,
+    estimatedMinutes: 5,
+    sticker: "❓",
+    goals: [
+      {
+        id: "zh-b1-l4-g1",
+        description: "Ask 'what is this?' in Chinese",
+        vocabularyIds: ["zh-vocab-zhe-shi", "zh-vocab-shenme", "zh-vocab-na-shi"],
+      },
+    ],
+    activities: [
+      {
+        id: "zh-b1-l4-a1",
+        type: "vocabulary-intro",
+        instruction: "Learn question phrases in Chinese.",
+        items: [
+          { id: "zh-vocab-zhe-shi", word: "这是", translation: "This is", pronunciation: "jeh shih" },
+          { id: "zh-vocab-shenme", word: "什么", translation: "What", pronunciation: "shen-muh" },
+          { id: "zh-vocab-na-shi", word: "那是", translation: "That is", pronunciation: "nah shih" },
+        ],
+      },
+      {
+        id: "zh-b1-l4-a2",
+        type: "translate",
+        instruction: "Translate to Chinese.",
+        sourceText: "What is this?",
+        targetLanguage: "Chinese",
+        correctAnswer: "这是什么？",
+        acceptableAnswers: ["这是什么", "这是什么?", "这是什么？"],
+      },
+    ],
+  },
+  // Lesson 5: Numbers
+  {
+    id: "zh-basics-1-lesson-5",
+    unitId: "zh-basics-1",
+    title: "数字",
+    description: "Learn numbers 1-10 in Chinese.",
+    order: 5,
+    xpReward: 10,
+    estimatedMinutes: 5,
+    sticker: "🔢",
+    goals: [
+      {
+        id: "zh-b1-l5-g1",
+        description: "Count from 1 to 10 in Chinese",
+        vocabularyIds: ["zh-vocab-yi", "zh-vocab-er", "zh-vocab-san", "zh-vocab-shi"],
+      },
+    ],
+    activities: [
+      {
+        id: "zh-b1-l5-a1",
+        type: "vocabulary-intro",
+        instruction: "Learn numbers 1-10 in Chinese.",
+        items: [
+          { id: "zh-vocab-yi", word: "一", translation: "1 (one)", pronunciation: "ee" },
+          { id: "zh-vocab-er", word: "二", translation: "2 (two)", pronunciation: "are" },
+          { id: "zh-vocab-san", word: "三", translation: "3 (three)", pronunciation: "sahn" },
+          { id: "zh-vocab-shi", word: "十", translation: "10 (ten)", pronunciation: "shih" },
+        ],
+      },
+      {
+        id: "zh-b1-l5-a2",
+        type: "multiple-choice",
+        instruction: "What does 三 mean?",
+        prompt: "What does 三 mean?",
+        options: [
+          { id: "zh-b1-l5-a2-o1", text: "One", isCorrect: false },
+          { id: "zh-b1-l5-a2-o2", text: "Two", isCorrect: false },
+          { id: "zh-b1-l5-a2-o3", text: "Three", isCorrect: true },
+          { id: "zh-b1-l5-a2-o4", text: "Ten", isCorrect: false },
+        ],
+      },
+    ],
+  },
 ];
 
 export function getLessonsByUnit(unitId: string): Lesson[] {

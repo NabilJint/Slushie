@@ -58,7 +58,7 @@ export const units: Unit[] = [
     title: "Basics",
     description: "Greetings, introductions, and essential phrases.",
     order: 1,
-    lessonIds: ["ja-basics-1-lesson-1", "ja-basics-1-lesson-2", "ja-basics-1-lesson-3", "ja-basics-1-lesson-4"],
+    lessonIds: ["ja-basics-1-lesson-1", "ja-basics-1-lesson-2", "ja-basics-1-lesson-3", "ja-basics-1-lesson-4", "ja-basics-1-lesson-5"],
     xpReward: 40,
   },
   // Korean - Unit 1: Basics
@@ -68,7 +68,7 @@ export const units: Unit[] = [
     title: "Basics",
     description: "Greetings, introductions, and essential phrases.",
     order: 1,
-    lessonIds: ["ko-basics-1-lesson-1", "ko-basics-1-lesson-2", "ko-basics-1-lesson-3", "ko-basics-1-lesson-4"],
+    lessonIds: ["ko-basics-1-lesson-1", "ko-basics-1-lesson-2", "ko-basics-1-lesson-3", "ko-basics-1-lesson-4", "ko-basics-1-lesson-5"],
     xpReward: 40,
   },
   // Chinese - Unit 1: Basics
@@ -78,7 +78,7 @@ export const units: Unit[] = [
     title: "Basics",
     description: "Greetings, introductions, and essential phrases.",
     order: 1,
-    lessonIds: ["zh-basics-1-lesson-1", "zh-basics-1-lesson-2", "zh-basics-1-lesson-3", "zh-basics-1-lesson-4"],
+    lessonIds: ["zh-basics-1-lesson-1", "zh-basics-1-lesson-2", "zh-basics-1-lesson-3", "zh-basics-1-lesson-4", "zh-basics-1-lesson-5"],
     xpReward: 40,
   },
 ];

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo } from "react";
 import {
   View,
   Pressable,
@@ -128,23 +128,24 @@ function TabItem({
 export function CustomTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
 
-  const [scales] = useState(() =>
-    state.routes.map(() => makeMutable(0) as SharedValue<number>),
-  );
+  const scales = useMemo(() => {
+    return state.routes.map(() => makeMutable(0) as SharedValue<number>);
+  }, [state.routes]);
 
   const activeIndex = state.index;
 
   useEffect(() => {
     if (activeIndex >= 0 && activeIndex < scales.length) {
+      // eslint-disable-next-line react-hooks/immutability
       scales[activeIndex].value = 1;
     }
-  }, []);
+  }, [activeIndex, scales]);
 
   useEffect(() => {
     scales.forEach((s, i) => {
       s.value = withTiming(i === activeIndex ? 1 : 0, TIMING_CONFIG);
     });
-  }, [activeIndex]);
+  }, [activeIndex, scales]);
 
   return (
     <View
